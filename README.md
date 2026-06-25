@@ -23,7 +23,7 @@ Push image for kubernetes to find:
 
 Apply new deployment to kubernetes:
 
-```kubectl apply -f log_output/manifests/deployment.yaml```
+```kubectl apply -f manifests/deployment.yaml```
 
 Restart kubernetes image:
 

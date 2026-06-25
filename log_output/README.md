@@ -1,3 +1,5 @@
 ## Log output app
 
-Deploy with `kubectl apply -a manifests`
+Run with:
+
+```kubectl apply -f log_output/manifests/deployment.yaml```
