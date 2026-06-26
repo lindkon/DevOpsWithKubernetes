@@ -10,6 +10,7 @@
 - [1.4.](https://github.com/lindkon/DevOpsWithKubernetes/tree/1.4/the_project)
 - [1.5.](https://github.com/lindkon/DevOpsWithKubernetes/tree/1.5/the_project)
 - [1.6.](https://github.com/lindkon/DevOpsWithKubernetes/tree/1.6/the_project)
+- [1.7.](https://github.com/lindkon/DevOpsWithKubernetes/tree/1.7/log_output)
 
 
 ## Commands I will forget
