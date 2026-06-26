@@ -33,6 +33,10 @@ Check logs for a pod:
 
 ```kubectl logs log-output-8474b95fd9-np68p```
 
+Describe a pod or deployment or whatever:
+
+```kubectl describe pod log-output-8474b95fd9-np68p```
+
 ## Submission & Release Instructions
 
 To ensure exercises are graded correctly, follow this exact workflow to publish releases for every completed task.
