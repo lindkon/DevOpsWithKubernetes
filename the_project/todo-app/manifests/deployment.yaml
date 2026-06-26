@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: todo-app
-        image: lindkon/todo-app:1.5f
+        image: lindkon/todo-app:1.6
         env:
         - name: PORT
-          value: "8000"
+          value: "3000"
