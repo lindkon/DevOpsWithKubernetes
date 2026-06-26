@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: log-output
-          image: lindkon/log-output:1.7a
+          image: lindkon/log-output:1.9d
           env:
           - name: PORT
             value: "3000"
