@@ -1,7 +1,6 @@
 const crypto = require('crypto');
 const http = require('http');
 
-
 const s = crypto.randomUUID();
 let currentStatus = new Date().toISOString() + ": " + s;
 
