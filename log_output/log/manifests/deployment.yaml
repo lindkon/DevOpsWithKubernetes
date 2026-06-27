@@ -12,9 +12,20 @@ spec:
       labels:
         app: log-output
     spec:
+      volumes:
+        - name: log-storage
+          emptyDir: {}
       containers:
-        - name: log-output
-          image: lindkon/log-output:1.9d
+        - name: log-write
+          image: lindkon/log-output:1.10
           env:
           - name: PORT
             value: "3000"
+          volumeMounts:
+          - name: log-storage
+            mountPath: /usr/src/app/files
+        - name: log-read
+          image: lindkon/log-output:1.10
+          volumeMounts:
+          - name: log-storage
+            mountPath: /usr/src/app/files
