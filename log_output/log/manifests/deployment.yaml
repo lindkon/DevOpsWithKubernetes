@@ -17,7 +17,7 @@ spec:
           emptyDir: {}
       containers:
         - name: log-write
-          image: lindkon/log-write:1.10a
+          image: lindkon/log-write:1.10b
           env:
           - name: PORT
             value: "3000"

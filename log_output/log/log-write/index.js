@@ -14,7 +14,7 @@ const writeLog = async () => {
   currentStatus = `${timestamp}: ${s}`;
 
   await new Promise((res, rej) => {
-    fs.writeFile(filePath, currentStatus, (err) => { 
+    fs.appendFile(filePath, currentStatus + '\n', (err) => { 
       if (err) return rej(err);
       return res();
     });
