@@ -1,34 +1,40 @@
 const crypto = require('crypto');
 const http = require('http');
+const fs = require('fs');
+const path = require('path');
 
+const PORT = process.env.PORT;
+const directory = path.join('/', 'usr', 'src', 'app', 'files');
+const filePath = path.join(directory, 'log.txt');
 const s = crypto.randomUUID();
-let currentStatus = new Date().toISOString() + ": " + s;
+let currentStatus = '';
 
-const printLog = () => {
+const writeLog = async () => {
   const timestamp = new Date().toISOString();
   currentStatus = `${timestamp}: ${s}`;
+
+  await new Promise((res, rej) => {
+    fs.writeFile(filePath, currentStatus, (err) => { 
+      if (err) return rej(err);
+      return res();
+    });
+  });
   console.log(currentStatus);
 };
 
-printLog();
-setInterval(printLog, 5000);
+const fileAlreadyExists = async () => new Promise(res => {
+  fs.stat(filePath, (err, stats) => {
+    if (err || !stats) return res(false);
+    return res(true);
+  })
+})
 
-const PORT = process.env.PORT;
+const initFile = async () => {
+  if (await fileAlreadyExists()) return;
+  await new Promise(res => fs.mkdir(directory, (err) => res()));
+  await writeLog();
+}
 
-let pongCount = 0;
-
-const server = http.createServer((req, res) => {
-  if (req.method === 'GET' && req.url === '/') {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    res.end(currentStatus);
-  } else {
-    res.statusCode = 404;
-    res.setHeader('Content-Type', 'text/plain');
-    res.end('Not Found');
-  }
-});
-
-server.listen(PORT, () => {
-  console.log(`Server started in port ${PORT}`);
-});
+console.log('Log write started');
+initFile();
+setInterval(writeLog, 5000);

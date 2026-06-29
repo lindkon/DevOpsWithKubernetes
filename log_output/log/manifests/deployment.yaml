@@ -17,7 +17,7 @@ spec:
           emptyDir: {}
       containers:
         - name: log-write
-          image: lindkon/log-output:1.10
+          image: lindkon/log-write:1.10a
           env:
           - name: PORT
             value: "3000"
@@ -25,7 +25,10 @@ spec:
           - name: log-storage
             mountPath: /usr/src/app/files
         - name: log-read
-          image: lindkon/log-output:1.10
+          image: lindkon/log-read:1.10c
+          env:
+          - name: PORT
+            value: "3000"
           volumeMounts:
           - name: log-storage
             mountPath: /usr/src/app/files

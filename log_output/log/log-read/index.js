@@ -1,25 +1,23 @@
 const crypto = require('crypto');
 const http = require('http');
-
-const s = crypto.randomUUID();
-let currentStatus = new Date().toISOString() + ": " + s;
-
-const printLog = () => {
-  const timestamp = new Date().toISOString();
-  currentStatus = `${timestamp}: ${s}`;
-  console.log(currentStatus);
-};
-
-printLog();
-setInterval(printLog, 5000);
+const fs = require('fs');
+const path = require('path');
 
 const PORT = process.env.PORT;
+const directory = path.join('/', 'usr', 'src', 'app', 'files');
+const filePath = path.join(directory, 'log.txt');
 
-let pongCount = 0;
+const getFile = async () => new Promise(res => {
+  fs.readFile(filePath, (err, buffer) => {
+    if (err) return console.log('FAILED TO READ FILE', '----------------', err);
+    res(buffer);
+  })
+});
 
-const server = http.createServer((req, res) => {
+const server =  http.createServer( async (req, res) => {
   if (req.method === 'GET' && req.url === '/') {
-    res.statusCode = 200;
+    const currentStatus = await getFile();
+    res.statusCode = 200;   
     res.setHeader('Content-Type', 'text/plain');
     res.end(currentStatus);
   } else {
