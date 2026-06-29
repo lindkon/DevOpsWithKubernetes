@@ -14,18 +14,17 @@ spec:
     spec:
       volumes:
         - name: log-storage
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: log-claim
       containers:
         - name: log-write
-          image: lindkon/log-write:1.10b
+          image: lindkon/log-write:1.11
           env:
-          - name: PORT
-            value: "3000"
           volumeMounts:
           - name: log-storage
             mountPath: /usr/src/app/files
         - name: log-read
-          image: lindkon/log-read:1.10c
+          image: lindkon/log-read:1.11
           env:
           - name: PORT
             value: "3000"
