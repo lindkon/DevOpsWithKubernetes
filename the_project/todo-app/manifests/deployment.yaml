@@ -18,7 +18,7 @@ spec:
             claimName: project-claim
       containers:
         - name: todo-app
-          image: lindkon/todo-app:1.12b
+          image: lindkon/todo-app:1.13b
           env:
           - name: PORT
             value: "3001"

@@ -86,13 +86,16 @@
     <img src="/image.jpg" alt="Random image" />
     <h1>📝 Todo App</h1>
     <div class="input-row">
-      <input type="text" id="newTodo" placeholder="Add a new task..." />
+      <input type="text" id="newTodo" placeholder="Add a new task..." maxlength="140"/>
       <button onclick="addTodo()">Add</button>
     </div>
     <ul id="todoList"><li class="empty">No tasks yet. Add one above!</li></ul>
   </div>
   <script>
-    const todos = [];
+    const todos = [
+      { text: 'Learn Kubernetes', done: false },
+      { text: 'Finish the todo app', done: false },
+    ];
     function render() {
       const list = document.getElementById('todoList');
       if (todos.length === 0) {
@@ -120,6 +123,7 @@
     document.getElementById('newTodo').addEventListener('keydown', e => {
       if (e.key === 'Enter') addTodo();
     });
+    render();
   </script>
 </body>
 </html>
