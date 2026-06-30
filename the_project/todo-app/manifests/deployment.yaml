@@ -18,7 +18,7 @@ spec:
             claimName: project-claim
       containers:
         - name: todo-app
-          image: lindkon/todo-app:1.12
+          image: lindkon/todo-app:1.12b
           env:
           - name: PORT
             value: "3001"
@@ -26,7 +26,7 @@ spec:
           - name: image-storage
             mountPath: /usr/src/app/files
         - name: get-image
-          image: lindkon/get-image:1.12
+          image: lindkon/get-image:1.12c
           env:
           - name: PORT
             value: "3000"
