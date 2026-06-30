@@ -12,9 +12,24 @@ spec:
       labels:
         app: todo-app
     spec:
+      volumes:
+        - name: image-storage
+          persistentVolumeClaim:
+            claimName: project-claim
       containers:
-      - name: todo-app
-        image: lindkon/todo-app:1.8c
-        env:
-        - name: PORT
-          value: "3000"
+        - name: todo-app
+          image: lindkon/todo-app:1.12
+          env:
+          - name: PORT
+            value: "3001"
+          volumeMounts:
+          - name: image-storage
+            mountPath: /usr/src/app/files
+        - name: get-image
+          image: lindkon/get-image:1.12
+          env:
+          - name: PORT
+            value: "3000"
+          volumeMounts:
+          - name: image-storage
+            mountPath: /usr/src/app/files
