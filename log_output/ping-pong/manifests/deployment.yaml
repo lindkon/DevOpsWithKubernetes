@@ -12,16 +12,9 @@ spec:
       labels:
         app: ping-pong
     spec:
-      volumes:
-        - name: pong-storage
-          persistentVolumeClaim:
-            claimName: log-claim
       containers:
         - name: ping-pong
           image: lindkon/ping-pong:2.1
           env:
           - name: PORT
             value: "3001"
-          volumeMounts:
-          - name: pong-storage
-            mountPath: /usr/src/app/files

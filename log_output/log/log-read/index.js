@@ -6,7 +6,6 @@ const path = require('path');
 const PORT = process.env.PORT;
 const directory = path.join('/', 'usr', 'src', 'app', 'files');
 const logPath = path.join(directory, 'log.txt');
-const pongPath = path.join(directory, 'pong.txt');
 
 const getFile = async (filePath) => new Promise(res => {
   fs.readFile(filePath, (err, buffer) => {
