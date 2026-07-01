@@ -53,6 +53,14 @@ Make config visible:
 
 ```kubectl config view --minify --raw```
 
+Add package.json:
+
+npm init -y
+
+Add npm dependency:
+
+npm install 
+
 ## Submission & Release Instructions
 
 To ensure exercises are graded correctly, follow this exact workflow to publish releases for every completed task.
