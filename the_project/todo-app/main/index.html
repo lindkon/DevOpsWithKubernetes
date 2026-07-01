@@ -85,45 +85,48 @@
   <div class="container">
     <img src="/image.jpg" alt="Random image" />
     <h1>📝 Todo App</h1>
-    <div class="input-row">
+    <form id="todo-form">
       <input type="text" id="newTodo" placeholder="Add a new task..." maxlength="140"/>
-      <button onclick="addTodo()">Add</button>
-    </div>
+      <button type="submit">Add</button>
+    </form>
     <ul id="todoList"><li class="empty">No tasks yet. Add one above!</li></ul>
   </div>
-  <script>
-    const todos = [
-      { text: 'Learn Kubernetes', done: false },
-      { text: 'Finish the todo app', done: false },
-    ];
-    function render() {
-      const list = document.getElementById('todoList');
-      if (todos.length === 0) {
-        list.innerHTML = '<li class="empty">No tasks yet. Add one above!</li>';
-        return;
-      }
-      list.innerHTML = todos.map((t, i) =>
-        '<li class="' + (t.done ? 'done' : '') + '">' +
-          '<input type="checkbox" ' + (t.done ? 'checked' : '') + ' onchange="toggle(' + i + ')" />' +
-          '<span>' + t.text.replace(/</g,'&lt;') + '</span>' +
-          '<button class="del" onclick="remove(' + i + ')">✕</button>' +
-        '</li>'
-      ).join('');
+<script>
+  async function loadTodos() {
+    const res = await fetch('/todos');
+    const todos = await res.json();
+    const list = document.getElementById('todoList');
+    list.innerHTML = '';
+
+    if (todos.length === 0) {
+      list.innerHTML = '<li class="empty">No tasks yet. Add one above!</li>';
+      return;
     }
-    function addTodo() {
-      const input = document.getElementById('newTodo');
-      const text = input.value.trim();
-      if (!text) return;
-      todos.push({ text, done: false });
-      input.value = '';
-      render();
-    }
-    function toggle(i) { todos[i].done = !todos[i].done; render(); }
-    function remove(i) { todos.splice(i, 1); render(); }
-    document.getElementById('newTodo').addEventListener('keydown', e => {
-      if (e.key === 'Enter') addTodo();
+
+    todos.forEach(t => {
+      const li = document.createElement('li');
+      const span = document.createElement('span');
+      span.textContent = t.text;
+      li.appendChild(span);
+      list.appendChild(li);
     });
-    render();
-  </script>
+  }
+
+  document.getElementById('todo-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const input = document.getElementById('newTodo');
+    if (!input.value.trim()) return;
+
+    await fetch('/todos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ todo: input.value }),
+    });
+    input.value = '';
+    loadTodos();
+  });
+
+  loadTodos();
+</script>
 </body>
 </html>
