@@ -18,7 +18,7 @@ spec:
             claimName: log-claim
       containers:
         - name: ping-pong
-          image: lindkon/ping-pong:1.11g
+          image: lindkon/ping-pong:2.1
           env:
           - name: PORT
             value: "3001"

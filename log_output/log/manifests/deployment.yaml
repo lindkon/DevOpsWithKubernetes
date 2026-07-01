@@ -24,7 +24,7 @@ spec:
           - name: log-storage
             mountPath: /usr/src/app/files
         - name: log-read
-          image: lindkon/log-read:1.11
+          image: lindkon/log-read:2.1d
           env:
           - name: PORT
             value: "3000"
