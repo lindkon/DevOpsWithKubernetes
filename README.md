@@ -18,6 +18,11 @@
 - [1.12.](https://github.com/lindkon/DevOpsWithKubernetes/tree/1.12/the_project)
 - [1.13.](https://github.com/lindkon/DevOpsWithKubernetes/tree/1.13/the_project)
 
+### Chapter 3
+
+- [2.1.](https://github.com/lindkon/DevOpsWithKubernetes/tree/2.1/log_output)
+
+
 ## Commands I will forget
 
 Build docker image:
