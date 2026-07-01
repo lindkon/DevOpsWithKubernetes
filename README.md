@@ -62,6 +62,8 @@ Add npm dependency:
 
 npm install 
 
+change namespace with kubens and cluster with kubectx
+
 ## Submission & Release Instructions
 
 To ensure exercises are graded correctly, follow this exact workflow to publish releases for every completed task.
