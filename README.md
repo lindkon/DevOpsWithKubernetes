@@ -26,6 +26,7 @@
 - [2.4.](https://github.com/lindkon/DevOpsWithKubernetes/tree/2.4/the_project)
 - [2.5.](https://github.com/lindkon/DevOpsWithKubernetes/tree/2.5/log_output)
 - [2.6.](https://github.com/lindkon/DevOpsWithKubernetes/tree/2.6/the_project)
+- [2.7.](https://github.com/lindkon/DevOpsWithKubernetes/tree/2.7/log_output)
 
 ## Commands I will forget
 
