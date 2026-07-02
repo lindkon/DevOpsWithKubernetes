@@ -5,6 +5,7 @@ const path = require('path');
 
 const PORT = process.env.PORT;
 const directory = path.join('/', 'usr', 'src', 'app', 'files');
+const filePath = path.join('/', 'etc', 'config', 'information.txt');
 const logPath = path.join(directory, 'log.txt');
 
 const getFile = async (filePath) => new Promise(res => {
@@ -26,9 +27,16 @@ const server =  http.createServer( async (req, res) => {
   if (req.method === 'GET' && req.url === '/') {
     const currentStatus = await getFile(logPath);
     const pongCount = await getPongCount();
+    const fileInfo = await getFile(filePath);
+    const message  = `MESSAGE=${process.env.MESSAGE}`;
     res.statusCode = 200;   
     res.setHeader('Content-Type', 'text/plain');
-    res.end(`${currentStatus}\nPing / Pongs: ${pongCount}`);
+    res.end(
+      `file content: ${fileInfo}\n` +
+      `env variable: ${message}\n` +
+      `${currentStatus}\n` +
+      `Ping / Pongs: ${pongCount}`
+    );
   } else {
     res.statusCode = 404;
     res.setHeader('Content-Type', 'text/plain');

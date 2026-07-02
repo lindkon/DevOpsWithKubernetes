@@ -17,3 +17,12 @@ EOF
 
 
 kubectl exec -it ubuntu -- /bin/bash
+
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: pixabay-apikey
+data:
+  API_KEY: "56531896-e21bf55eee72730b424839747"
+EOF

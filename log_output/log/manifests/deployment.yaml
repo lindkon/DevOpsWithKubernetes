@@ -17,18 +17,31 @@ spec:
         - name: log-storage
           persistentVolumeClaim:
             claimName: log-claim
+        - name: config
+          configMap:
+            name: configmap
       containers:
         - name: log-write
           image: lindkon/log-write:1.11
           env:
           volumeMounts:
-          - name: log-storage
-            mountPath: /usr/src/app/files
+            - name: log-storage
+              mountPath: /usr/src/app/files
         - name: log-read
-          image: lindkon/log-read:2.1e
+          image: lindkon/log-read:2.5b
           env:
-          - name: PORT
-            value: "3000"
+            - name: PORT
+              value: "3000"
+            - name: MESSAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: message
           volumeMounts:
-          - name: log-storage
-            mountPath: /usr/src/app/files
+            - name: log-storage
+              mountPath: /usr/src/app/files
+            - name: config
+              mountPath: /etc/config
+              readOnly: true
+      
+

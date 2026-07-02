@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap
+  namespace: exercises
+data:
+  information.txt: "some valuable info"
+  message: "hello world"
+  
