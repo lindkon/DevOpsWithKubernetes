@@ -1,20 +1,62 @@
 const Koa = require('koa');
 const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
+const { Pool } = require('pg');
 
-const PORT = process.env.PORT || 3000;
+const requireEnv = (name) => {
+  const value = process.env[name];
+  if (!value) throw new Error(`Missing required env var: ${name}`);
+  return value;
+};
+
+const PORT = requireEnv('PORT');
+const PGHOST = requireEnv('PGHOST');
+const PGPORT = requireEnv('PGPORT');
+const PGDATABASE = requireEnv('PGDATABASE');
+const PGUSER = requireEnv('PGUSER');
+const PGPASSWORD = requireEnv('POSTGRES_PASSWORD');
+
+const pool = new Pool({
+  host: PGHOST,
+  port: Number(PGPORT),
+  database: PGDATABASE,
+  user: PGUSER,
+  password: PGPASSWORD,
+});
+
+const initTable = async () => {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS todos (
+      id SERIAL PRIMARY KEY,
+      text TEXT NOT NULL,
+      created_at TIMESTAMP DEFAULT now()
+    )
+  `);
+};
+
+const getTodos = async () => {
+  const result = await pool.query('SELECT id, text FROM todos ORDER BY id ASC');
+  return result.rows;
+};
+
+const addTodo = async (text) => {
+  const result = await pool.query(
+    'INSERT INTO todos (text) VALUES ($1) RETURNING id, text',
+    [text]
+  );
+  return result.rows[0];
+};
 
 const app = new Koa();
 const router = new Router();
 
-let todos = [];
-
-router.get('/todos', (ctx) => {
+router.get('/todos', async (ctx) => {
+  const todos = await getTodos();
   ctx.status = 200;
   ctx.body = todos;
 });
 
-router.post('/todos', (ctx) => {
+router.post('/todos', async (ctx) => {
   const { todo } = ctx.request.body;
 
   if (!todo || typeof todo !== 'string' || todo.trim() === '') {
@@ -23,9 +65,7 @@ router.post('/todos', (ctx) => {
     return;
   }
 
-  const newTodo = { text: todo };
-  todos.push(newTodo);
-
+  const newTodo = await addTodo(todo.trim());
   ctx.status = 201;
   ctx.body = newTodo;
 });
@@ -34,6 +74,8 @@ app.use(bodyParser());
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-app.listen(PORT, () => {
-  console.log(`Server started in port ${PORT}`);
+initTable().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}`);
+  });
 });
