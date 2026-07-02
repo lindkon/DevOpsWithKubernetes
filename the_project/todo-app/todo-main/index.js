@@ -2,10 +2,18 @@ const http = require('http');
 const path = require('path')
 const fs = require('fs');
 
-const PORT = process.env.PORT;
+const requireEnv = (name) => {
+  const value = process.env[name];
+  if (!value) throw new Error(`Missing required env var: ${name}`);
+  return value;
+};
+
+const PORT = requireEnv('PORT');
+const FILES_DIR = requireEnv('FILES_DIR');
+const IMAGE_FILENAME = requireEnv('IMAGE_FILENAME');
+
 const HTML_PATH = path.join(__dirname, 'index.html');
-const DIRECTORY = path.join('/', 'usr', 'src', 'app', 'files')
-const IMAGE_PATH = path.join(DIRECTORY, 'image.jpg')
+const IMAGE_PATH = path.join(FILES_DIR, IMAGE_FILENAME);
 
 const getFile = async (filePath) => new Promise((resolve, reject) => {
   fs.readFile(filePath, (err, buffer) => {

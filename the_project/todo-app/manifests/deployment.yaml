@@ -18,19 +18,55 @@ spec:
           persistentVolumeClaim:
             claimName: project-claim
       containers:
-        - name: todo-app
-          image: lindkon/todo-app:2.2
-          env:
-          - name: PORT
-            value: "3001"
+        - name: todo-main
+          image: lindkon/todo-main:2.6
           volumeMounts:
-          - name: image-storage
-            mountPath: /usr/src/app/files
+            - name: image-storage
+              mountPath: /usr/src/app/files
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-app-config
+                  key: PORT
+            - name: FILES_DIR
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-app-config
+                  key: FILES_DIR
+            - name: IMAGE_FILENAME
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-app-config
+                  key: IMAGE_FILENAME
         - name: get-image
-          image: lindkon/get-image:1.12f
-          env:
-          - name: PORT
-            value: "3000"
+          image: lindkon/get-image:2.6
           volumeMounts:
-          - name: image-storage
-            mountPath: /usr/src/app/files
+            - name: image-storage
+              mountPath: /usr/src/app/files
+          env:
+            - name: FILES_DIR
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-app-config
+                  key: FILES_DIR
+            - name: IMAGE_FILENAME
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-app-config
+                  key: IMAGE_FILENAME
+            - name: IMAGE_SOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-app-config
+                  key: IMAGE_SOURCE_URL
+            - name: MAX_IMAGE_AGE_MS
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-app-config
+                  key: MAX_IMAGE_AGE_MS
+            - name: CHECK_INTERVAL_MS
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-app-config
+                  key: CHECK_INTERVAL_MS
