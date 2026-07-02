@@ -12,3 +12,5 @@ data:
   PGDATABASE: "todos"
   PGUSER: "todos"
   PORT: "3001"
+  HOST: "todo-backend-svc"
+  TODO_SERVICE_PORT: "80"
