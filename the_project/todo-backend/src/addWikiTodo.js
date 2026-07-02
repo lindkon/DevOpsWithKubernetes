@@ -10,46 +10,33 @@ const requireEnv = (name) => {
 const HOST = requireEnv('HOST');
 const PORT = requireEnv('TODO_SERVICE_PORT');
 
-const getRandomArticle = () => {
+const getRandomArticleUrl = (url = 'https://en.wikipedia.org/wiki/Special:Random') => {
   return new Promise((resolve, reject) => {
-    const fetchUrl = (url) => {
-      https.get(
-        url,
-        { headers: { 'User-Agent': 'todo-creator-cronjob' } },
-        (res) => {
-          // Follow redirects (301, 302, 303, 307, 308)
-          if ([301, 302, 303, 307, 308].includes(res.statusCode)) {
-            const redirectUrl = res.headers.location;
-            res.resume(); // discard the body
-            if (!redirectUrl) {
-              reject(new Error(`Redirect with no location header (status ${res.statusCode})`));
-              return;
-            }
-            fetchUrl(redirectUrl);
+    const req = https.request(
+      url,
+      { method: 'HEAD', headers: { 'User-Agent': 'todo-creator-cronjob' } },
+      (res) => {
+        res.resume();
+
+        if ([301, 302, 303, 307, 308].includes(res.statusCode)) {
+          const location = res.headers.location;
+          if (!location) {
+            reject(new Error(`Redirect with no location header (status ${res.statusCode})`));
             return;
           }
-
-          if (res.statusCode !== 200) {
-            res.resume();
-            reject(new Error(`Unexpected status ${res.statusCode}`));
-            return;
-          }
-
-          let body = '';
-          res.on('data', (chunk) => (body += chunk));
-          res.on('end', () => {
-            try {
-              const json = JSON.parse(body);
-              resolve({ title: json.title, url: json.content_urls.desktop.page });
-            } catch (err) {
-              reject(err);
-            }
-          });
+          const resolvedUrl = new URL(location, url).toString();
+          resolve(getRandomArticleUrl(resolvedUrl));
+          return;
         }
-      ).on('error', reject);
-    };
-
-    fetchUrl('https://en.wikipedia.org/api/rest_v1/page/random/summary');
+        if (res.statusCode !== 200) {
+          reject(new Error(`Unexpected status ${res.statusCode}`));
+          return;
+        }
+        resolve(url);
+      }
+    );
+    req.on('error', reject);
+    req.end();
   });
 };
 
@@ -81,15 +68,15 @@ const createTodo = (text) => {
 };
 
 const run = async () => {
-  const article = await getRandomArticle();
-  const todoText = `Read ${article.url}`;
+  const articleUrl = await getRandomArticleUrl();
+  const todoText = `Read ${articleUrl}`;
   await createTodo(todoText);
   console.log('Created todo:', todoText);
 };
 
 run()
-.then(() => process.exit(0))
-.catch((err) => {
-  console.error('Failed:', err);
-  process.exit(1);
-});
+  .then(() => process.exit(0))
+  .catch((err) => {
+    console.error('Failed:', err);
+    process.exit(1);
+  });

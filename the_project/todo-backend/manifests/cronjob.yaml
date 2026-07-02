@@ -4,14 +4,14 @@ metadata:
   name: todo-creator
   namespace: project
 spec:
-  schedule: "0 * * * *"
+  schedule: "*/1 * * * *"
   jobTemplate:
     spec:
       template:
         spec:
           containers:
             - name: todo-creator
-              image: lindkon/todo-backend:2.9i
+              image: lindkon/todo-backend:2.9m
               command: ["node", "src/addWikiTodo.js"]
               envFrom:
                 - configMapRef:
