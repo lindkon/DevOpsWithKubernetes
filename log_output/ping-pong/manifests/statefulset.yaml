@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ping-pong-db
+  namespace: exercises
+spec:
+  serviceName: ping-pong-db-svc
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ping-pong-db
+  template:
+    metadata:
+      labels:
+        app: ping-pong-db
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:18-alpine
+          ports:
+            - name: postgres
+              containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: ping-pong-config
+          volumeMounts:
+            - name: pong-storage
+              mountPath: /var/lib/postgresql
+  volumeClaimTemplates:
+    - metadata:
+        name: pong-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: local-path
+        resources:
+          requests:
+            storage: 100Mi

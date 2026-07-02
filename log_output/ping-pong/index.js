@@ -1,46 +1,51 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const { Pool } = require('pg');
 
-const PORT = process.env.PORT;
-const directory = path.join('/', 'usr', 'src', 'app', 'files');
-const filePath = path.join(directory, 'pong.txt');
+const requireEnv = (name) => {
+  const value = process.env[name];
+  if (!value) throw new Error(`Missing required env var: ${name}`);
+  return value;
+};
 
-const getCount = async () => new Promise(res => {
-  fs.readFile(filePath, (err, buffer) => {
-    if (err) return res('0');
-    res(buffer);
-  });
+const PORT = requireEnv('PORT');
+const PGHOST = requireEnv('PGHOST');
+const PGPORT = requireEnv('PGPORT');
+const PGDATABASE = requireEnv('PGDATABASE');
+const PGUSER = requireEnv('PGUSER');
+const PGPASSWORD = requireEnv('POSTGRES_PASSWORD');
+
+const pool = new Pool({
+  host: PGHOST,
+  port: Number(PGPORT),
+  database: PGDATABASE,
+  user: PGUSER,
+  password: PGPASSWORD,
 });
 
-const getAndIncrementCount = async () => {
-  const count = parseInt(await getCount()) + 1;
+const getCount = async () => {
+  const result = await pool.query('SELECT COUNT(*)::int AS count FROM pings');
+  return result.rows[0].count;
+};
 
-  await new Promise((res, rej) => {
-    fs.writeFile(filePath, String(count), (err) => { 
-      if (err) return rej(err);
-      return res();
-    });
-  });
+const getAndIncrementCount = async () => {
+  await pool.query('INSERT INTO pings DEFAULT VALUES');
+  const count = await getCount();
   console.log(count);
   return count;
 };
 
-const fileAlreadyExists = async () => new Promise(res => {
-  fs.stat(filePath, (err, stats) => {
-    if (err || !stats) return res(false);
-    return res(true);
-  })
-})
 
-const initFile = async () => {
-  if (await fileAlreadyExists()) return;
-  await new Promise(res => fs.mkdir(directory, (err) => res()));
-    await new Promise((res, rej) => fs.writeFile(filePath, '0', (err) => {
-    if (err) return rej(err);
-  res();
-  }));
-}
+const initTable = async () => {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS pings (
+      id SERIAL PRIMARY KEY,
+      created_at TIMESTAMP DEFAULT now()
+    )
+  `);
+};
+
 
 const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && req.url === '/pingpong') {
@@ -52,7 +57,7 @@ const server = http.createServer(async (req, res) => {
     const pongCount = await getCount();
     res.statusCode = 200;
     res.setHeader('Content-Type', 'text/plain');
-    res.end(pongCount);
+    res.end(String(pongCount));
   } else {
     res.statusCode = 404;
     res.setHeader('Content-Type', 'text/plain');
@@ -60,7 +65,7 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-initFile().then(() => {
+initTable().then(() => {
   server.listen(PORT, () => {
     console.log(`Pingpong server started in port ${PORT}`);
   });

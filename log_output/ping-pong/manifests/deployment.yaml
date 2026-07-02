@@ -15,7 +15,8 @@ spec:
     spec:
       containers:
         - name: ping-pong
-          image: lindkon/ping-pong:2.1
-          env:
-          - name: PORT
-            value: "3001"
+          image: lindkon/ping-pong:2.7f
+          envFrom:
+            - configMapRef:
+                name: ping-pong-config
+        

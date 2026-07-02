@@ -63,7 +63,7 @@ npm init -y
 
 Add npm dependency:
 
-npm install 
+npm install pg --save
 
 change namespace with kubens and cluster with kubectx
 
