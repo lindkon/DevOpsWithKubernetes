@@ -94,7 +94,7 @@ You must create a GitHub release where the tag **exactly matches** the exercise 
 **Using the command line:**
 
 git tag -a 2.1 -m "Exercise 2.1"
-git push origin 2.1`
+git push origin 2.1
 
 *(You can also draft the release and create the tag directly through the GitHub UI under the **Releases** tab.)*
 
