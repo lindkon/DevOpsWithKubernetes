@@ -19,7 +19,7 @@ spec:
             claimName: project-claim
       containers:
         - name: todo-main
-          image: lindkon/todo-main:2.6
+          image: lindkon/todo-main:2.6b
           volumeMounts:
             - name: image-storage
               mountPath: /usr/src/app/files
