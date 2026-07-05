@@ -4,7 +4,7 @@ metadata:
   name: todo-creator
   namespace: project
 spec:
-  schedule: "*/1 * * * *"
+  schedule: "* * * * *"
   jobTemplate:
     spec:
       template:
