@@ -47,6 +47,21 @@ const addTodo = async (text) => {
   return result.rows[0];
 };
 
+const requestLogger = async (ctx, next) => {
+  const start = Date.now();
+  await next(); 
+
+  const log = {
+    timestamp: new Date().toISOString(),
+    method: ctx.method,
+    path: ctx.originalUrl,
+    status: ctx.status,
+    durationMs: Date.now() - start,
+    body: ctx.method === 'POST' ? ctx.request.body : undefined,
+  };
+  console.log(JSON.stringify(log));
+};
+
 const app = new Koa();
 const router = new Router();
 
@@ -64,6 +79,11 @@ router.post('/todos', async (ctx) => {
     ctx.body = { error: 'todo required' };
     return;
   }
+  if (todo.length > 140) {
+    ctx.status = 400;
+    ctx.body = { error: 'todo length exceeds 140 characters' };
+    return;
+  }
 
   const newTodo = await addTodo(todo.trim());
   ctx.status = 201;
@@ -71,6 +91,7 @@ router.post('/todos', async (ctx) => {
 });
 
 app.use(bodyParser());
+app.use(requestLogger);
 app.use(router.routes());
 app.use(router.allowedMethods());
 
