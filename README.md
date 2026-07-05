@@ -31,6 +31,10 @@
 - [2.9.](https://github.com/lindkon/DevOpsWithKubernetes/tree/2.9/the_project)
 - [2.10.](https://github.com/lindkon/DevOpsWithKubernetes/tree/2.10/the_project)
 
+### Chapter 4
+
+- [3.1.](https://github.com/lindkon/DevOpsWithKubernetes/tree/3.1/log_output)
+
 ## Commands I will forget
 
 Delete cluster when not needed:
@@ -91,7 +95,7 @@ Once your application is running correctly in your cluster, commit and push your
 
 `git add .`
 
-`git commit -m "Complete Exercise 1.1"`
+`git commit -m "Complete Exercise 3.1"`
 
 `git push origin main`
 
@@ -100,8 +104,8 @@ You must create a GitHub release where the tag **exactly matches** the exercise 
 
 **Using the command line:**
 
-git tag -a 2.1 -m "Exercise 2.1"
-git push origin 2.1
+git tag -a 2.1 -m "Exercise 3.1"
+git push origin 3.1
 
 *(You can also draft the release and create the tag directly through the GitHub UI under the **Releases** tab.)*
 
