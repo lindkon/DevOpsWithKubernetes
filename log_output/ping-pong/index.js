@@ -53,6 +53,10 @@ const server = http.createServer(async (req, res) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'text/plain');
     res.end(`pong ${pongCount}`);
+  } else if (req.method === 'GET' && req.url === '/') {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/plain');
+    res.end('Health OK');
   } else if (req.method === 'GET' && req.url === '/pings') {
     const pongCount = await getCount();
     res.statusCode = 200;
