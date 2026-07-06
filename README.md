@@ -34,6 +34,7 @@
 ### Chapter 4
 
 - [3.1.](https://github.com/lindkon/DevOpsWithKubernetes/tree/3.1/log_output)
+- [3.2.](https://github.com/lindkon/DevOpsWithKubernetes/tree/3.2/log_output)
 
 ## Commands I will forget
 
