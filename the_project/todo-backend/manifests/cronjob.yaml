@@ -11,7 +11,7 @@ spec:
         spec:
           containers:
             - name: todo-creator
-              image: lindkon/todo-backend:3.5c
+              image: lindkon/todo-backend
               command: ["node", "src/addWikiTodo.js"]
               envFrom:
                 - configMapRef:

@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: project
+resources:
+  # infra
+  - manifests/gateway.yaml
+  - manifests/pvc.yaml
+  - manifests/route.yaml
+  # app
+  - todo-app/manifests/configmap.yaml
+  - todo-app/manifests/deployment.yaml
+  - todo-app/manifests/service.yaml
+  # backend
+  - todo-backend/manifests/configmap.yaml
+  - todo-backend/manifests/deployment.yaml
+  - todo-backend/manifests/service.yaml
+  - todo-backend/manifests/headless-service.yaml
+  - todo-backend/manifests/statefulset.yaml
+  - todo-backend/manifests/cronjob.yaml
+images:
+  - name: lindkon/todo-backend
+    newTag: "3.5c"
+  - name: lindkon/todo-main
+    newTag: "3.5"
+  - name: lindkon/get-image
+    newTag: "3.5"

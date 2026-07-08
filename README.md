@@ -37,6 +37,7 @@
 - [3.2.](https://github.com/lindkon/DevOpsWithKubernetes/tree/3.2/log_output)
 - [3.3.](https://github.com/lindkon/DevOpsWithKubernetes/tree/3.3/log_output)
 - [3.4.](https://github.com/lindkon/DevOpsWithKubernetes/tree/3.4/log_output)
+- [3.5.](https://github.com/lindkon/DevOpsWithKubernetes/tree/3.5/the_project)
 
 ## Commands I will forget
 
@@ -51,6 +52,12 @@ docker build --platform linux/amd64 -t lindkon/ .
 
 Push image for kubernetes to find:
 docker push lindkon/
+
+Apply through kustomize:
+kubectl apply -k .
+
+Preview:
+kubectl kustomize .
 
 Apply new deployment to kubernetes:
 
