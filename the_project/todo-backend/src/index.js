@@ -71,6 +71,11 @@ router.get('/todos', async (ctx) => {
   ctx.body = todos;
 });
 
+router.get('/', async (ctx) => {
+  ctx.status = 200;
+  ctx.body = 'Todo health OK';
+});
+
 router.post('/todos', async (ctx) => {
   const { todo } = ctx.request.body;
 

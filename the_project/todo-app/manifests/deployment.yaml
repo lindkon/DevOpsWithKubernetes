@@ -19,7 +19,7 @@ spec:
             claimName: project-claim
       containers:
         - name: todo-main
-          image: lindkon/todo-main:2.6b
+          image: lindkon/todo-main:3.5
           volumeMounts:
             - name: image-storage
               mountPath: /usr/src/app/files
@@ -40,7 +40,7 @@ spec:
                   name: todo-app-config
                   key: IMAGE_FILENAME
         - name: get-image
-          image: lindkon/get-image:2.6
+          image: lindkon/get-image:3.5
           volumeMounts:
             - name: image-storage
               mountPath: /usr/src/app/files
