@@ -61,15 +61,24 @@ jobs:
       - name: Set up Kustomize
         uses: imranismail/setup-kustomize@v3
 
+      - name: 'Set namespace'
+        run: |-
+          if [ "$BRANCH" = "main" ]; then
+            echo "NAMESPACE=project" >> $GITHUB_ENV
+          else
+            echo "NAMESPACE=$BRANCH" >> $GITHUB_ENV
+          fi
+
       - name: Deploy
         working-directory: the_project
-        
         run: |-
-          kubectl create namespace project || true
+          kubectl create namespace $NAMESPACE || true
+          kubectl config set-context --current --namespace=$NAMESPACE
+          kustomize edit set namespace $NAMESPACE
           kustomize edit set image lindkon/todo-main=$TODO_MAIN_TAG
           kustomize edit set image lindkon/get-image=$GET_IMAGE_TAG
           kustomize edit set image lindkon/todo-backend=$TODO_BACKEND_TAG
           kustomize build . | kubectl apply -f -
-          kubectl rollout status deployment todo-app -n project
-          kubectl rollout status deployment todo-backend -n project
-          kubectl get services -o wide -n project
+          kubectl rollout status deployment todo-app -n $NAMESPACE
+          kubectl rollout status deployment todo-backend -n $NAMESPACE
+          kubectl get services -o wide -n $NAMESPACE
