@@ -48,15 +48,11 @@ const initTable = async () => {
 
 
 const server = http.createServer(async (req, res) => {
-  if (req.method === 'GET' && req.url === '/pingpong') {
+  if (req.method === 'GET' && req.url === '/') {
     const pongCount = await getAndIncrementCount();
     res.statusCode = 200;
     res.setHeader('Content-Type', 'text/plain');
     res.end(`pong ${pongCount}`);
-  } else if (req.method === 'GET' && req.url === '/') {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    res.end('Health OK');
   } else if (req.method === 'GET' && req.url === '/pings') {
     const pongCount = await getCount();
     res.statusCode = 200;
