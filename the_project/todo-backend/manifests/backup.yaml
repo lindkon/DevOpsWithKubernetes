@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: db-backup
+  namespace: project
+spec:
+  schedule: "0 0 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: backup-sa
+          restartPolicy: OnFailure
+          volumes:
+            - name: backup
+              emptyDir: {}
+          initContainers:
+            - name: dump
+              image: postgres:18-alpine
+              command: ["/bin/sh", "-c"]
+              args:
+                - pg_dump > /backup/todo-$(date +%Y-%m-%d-%H%M%S).sql
+              envFrom:
+                - configMapRef:
+                    name: todo-backend-config
+                - secretRef:
+                    name: todo-db-secret
+              volumeMounts:
+                - name: backup
+                  mountPath: /backup
+          containers:
+            - name: upload
+              image: google/cloud-sdk:slim
+              command: ["/bin/sh", "-c"]
+              args:
+                - gcloud storage cp /backup/*.sql gs://dwk-project-backup/
+              volumeMounts:
+                - name: backup
+                  mountPath: /backup
