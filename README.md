@@ -44,6 +44,7 @@
 - [3.9.](https://github.com/lindkon/DevOpsWithKubernetes/tree/3.9/log_output)
 - [3.10.](https://github.com/lindkon/DevOpsWithKubernetes/tree/3.10/the_project)
 - [3.11.](https://github.com/lindkon/DevOpsWithKubernetes/tree/3.11/the_project)
+- [3.12.](https://github.com/lindkon/DevOpsWithKubernetes/tree/3.12/the_project)
 
 
 ## Commands I will forget
