@@ -41,6 +41,7 @@
 - [3.6.](https://github.com/lindkon/DevOpsWithKubernetes/tree/3.6/the_project)
 - [3.7.](https://github.com/lindkon/DevOpsWithKubernetes/tree/3.7/the_project)
 - [3.8.](https://github.com/lindkon/DevOpsWithKubernetes/tree/3.8/the_project)
+- [3.9.](https://github.com/lindkon/DevOpsWithKubernetes/tree/3.9/log_output)
 
 
 ## Commands I will forget
@@ -128,3 +129,40 @@ After creating the tag, edit the **Exercises** section at the top of this file. 
 
 **Format:**
 `https://github.com/lindkon/DevOpsWithKubernetes/tree/EXERCISE_NUMBER/APP_DIRECTORY`
+
+## Exercise 3.9: DIY vs DBaaS
+
+### DIY pros
+- Customizable, you have full control over the database
+- You don't have to pay for a subscription or think as much about how to optimize usage costs.
+- A barebones approach can be put together quickly and locally, lots of guides online to help. However you still have to set it up yourself and it can be time consuming if anything goes wrong
+- You can use open-source software
+
+### DIY cons
+- You have to maintain availability yourself
+- No one to bail you and help out if you mess up
+- You have to know a lot more about how to manage the database
+- You have to know how to manage hardware
+- Scaling can get tricky as you have to buy and set up the hardware yourself if hosting yourself,
+if hosting on GKE, for example, it's easier 
+- You don't have as much time to spend on other stuff
+- You are responsible for security and backups
+- You are responsible for maintenance
+- To make a backup you have to know how to dump the DB and store it yourself.
+
+### DBaaS pros
+- You sacrifice money for time, but not always as the upfront costs of a self hosted DB can be large
+- To initialize you just pay the provider who then gives you an endpoint
+- The service provider can assist you with issues
+- Saves time on managing hardware and scaling
+- Super good availability
+- Some legal coverage is outsourced to the provider
+- You don't have to know much about managing physical servers
+- If you want extra security or backups you can just pay for it
+- Backups are automated and expected as part of the service
+- Costs scale more smoothly with usage
+
+### DBaaS cons
+- You are not in control of the database
+- Can be expensive with unforeseen fees or if the provider hikes their rates
+- You are sometimes "trapped" by the provider, it can be hard to switch
