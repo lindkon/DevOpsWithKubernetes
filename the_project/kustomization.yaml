@@ -11,6 +11,7 @@ resources:
   - todo-app/manifests/deployment.yaml
   - todo-app/manifests/service.yaml
   # backend
+  - todo-backend/manifests/secret.yaml
   - todo-backend/manifests/configmap.yaml
   - todo-backend/manifests/deployment.yaml
   - todo-backend/manifests/service.yaml
