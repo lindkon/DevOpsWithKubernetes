@@ -10,9 +10,9 @@ const logPath = path.join(directory, 'log.txt');
 
 const getFile = async (filePath) => new Promise(res => {
   fs.readFile(filePath, (err, buffer) => {
-    if (err) return console.log('FAILED TO READ FILE', '----------------', err);
-    res(buffer);
-  })
+    if (err) return reject(err);
+    resolve(buffer);
+  });
 });
 
 const getPongCount = async () => new Promise((resolve, reject) => {
@@ -24,23 +24,34 @@ const getPongCount = async () => new Promise((resolve, reject) => {
 });
 
 const server =  http.createServer( async (req, res) => {
-  if (req.method === 'GET' && req.url === '/') {
-    const currentStatus = await getFile(logPath);
-    const pongCount = await getPongCount();
-    const fileInfo = await getFile(filePath);
-    const message  = `MESSAGE=${process.env.MESSAGE}`;
-    res.statusCode = 200;   
+  try {
+    if (req.method === 'GET' && req.url === '/') {
+      const currentStatus = await getFile(logPath);
+      const pongCount = await getPongCount();
+      const fileInfo = await getFile(filePath);
+      const message  = `MESSAGE=${process.env.MESSAGE}`;
+      res.statusCode = 200;   
+      res.setHeader('Content-Type', 'text/plain');
+      res.end(
+        `file content: ${fileInfo}\n` +
+        `env variable: ${message}\n` +
+        `${currentStatus}\n` +
+        `Ping / Pongs: ${pongCount}`
+      );
+    } else if (req.method === 'GET' && req.url === '/healthz') {
+      const pongCount = await getPongCount();
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'text/plain');
+      res.end(`Reading pong count ${pongCount}`);
+    } else {
+      res.statusCode = 404;
+      res.setHeader('Content-Type', 'text/plain');
+      res.end('Not Found');
+    }
+  } catch (err) {
+    res.statusCode = 500;
     res.setHeader('Content-Type', 'text/plain');
-    res.end(
-      `file content: ${fileInfo}\n` +
-      `env variable: ${message}\n` +
-      `${currentStatus}\n` +
-      `Ping / Pongs: ${pongCount}`
-    );
-  } else {
-    res.statusCode = 404;
-    res.setHeader('Content-Type', 'text/plain');
-    res.end('Not Found');
+    res.end(`error: ${err.message}`);
   }
 });
 

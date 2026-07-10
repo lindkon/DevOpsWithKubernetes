@@ -57,6 +57,20 @@ kubectl apply --server-side -f https://github.com/envoyproxy/gateway/releases/la
 Finally:
 kubectl -n envoy-gateway-system rollout status deployment/envoy-gateway --timeout=180s
 
+Also remember this for PVs:
+docker exec k3d-k3s-default-agent-0 mkdir -p /tmp/kube
+
+Not sure if needed always but eg was not found initially:
+kubectl apply -f - <<EOF
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: eg
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+EOF
+
+
 Delete cluster when not needed:
 gcloud container clusters delete dwk-cluster --zone=europe-north1-b
 

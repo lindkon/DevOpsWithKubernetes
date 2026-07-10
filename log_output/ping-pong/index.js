@@ -16,6 +16,8 @@ const PGDATABASE = requireEnv('PGDATABASE');
 const PGUSER = requireEnv('PGUSER');
 const PGPASSWORD = requireEnv('POSTGRES_PASSWORD');
 
+let dbReady = false;
+
 const pool = new Pool({
   host: PGHOST,
   port: Number(PGPORT),
@@ -23,6 +25,8 @@ const pool = new Pool({
   user: PGUSER,
   password: PGPASSWORD,
 });
+
+
 
 const getCount = async () => {
   const result = await pool.query('SELECT COUNT(*)::int AS count FROM pings');
@@ -36,7 +40,6 @@ const getAndIncrementCount = async () => {
   return count;
 };
 
-
 const initTable = async () => {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS pings (
@@ -45,28 +48,44 @@ const initTable = async () => {
     )
   `);
 };
+  
+const initWithRetry = async () => {
+  try {
+    await initTable();
+    dbReady = true;
+    console.log('Database initialized');
+  } catch (err) {
+    console.log(`DB not available yet (${err.message}), retrying in 5s`);
+    setTimeout(initWithRetry, 5000);
+  }
+};
 
 
 const server = http.createServer(async (req, res) => {
-  if (req.method === 'GET' && req.url === '/') {
-    const pongCount = await getAndIncrementCount();
-    res.statusCode = 200;
+  try {
+    if (req.method === 'GET' && req.url === '/') {
+      const pongCount = await getAndIncrementCount();
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'text/plain');
+      res.end(`pong ${pongCount}`);
+    } else if (req.method === 'GET' && (req.url === '/pings' || req.url === '/healthz')) {
+      const pongCount = await getCount();
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'text/plain');
+      res.end(String(pongCount));
+    } else {
+      res.statusCode = 404;
+      res.setHeader('Content-Type', 'text/plain');
+      res.end(`Not found`);
+    }
+  } catch (err) {
+    res.statusCode = 500;
     res.setHeader('Content-Type', 'text/plain');
-    res.end(`pong ${pongCount}`);
-  } else if (req.method === 'GET' && req.url === '/pings') {
-    const pongCount = await getCount();
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    res.end(String(pongCount));
-  } else {
-    res.statusCode = 404;
-    res.setHeader('Content-Type', 'text/plain');
-    res.end('Not Found');
+    res.end(`error: ${err.message}`);
   }
 });
 
-initTable().then(() => {
-  server.listen(PORT, () => {
-    console.log(`Pingpong server started in port ${PORT}`);
-  });
+server.listen(PORT, () => {
+  console.log(`Pingpong server started in port ${PORT}`);
 });
+initWithRetry();

@@ -15,7 +15,13 @@ spec:
     spec:
       containers:
         - name: ping-pong
-          image: lindkon/ping-pong:3.4
+          image: lindkon/ping-pong:4.1b
           envFrom:
             - configMapRef:
                 name: ping-pong-config
+          readinessProbe:
+            initialDelaySeconds: 10 # Initial delay until the readiness is tested
+            periodSeconds: 5 # How often to test
+            httpGet:
+               path: /healthz
+               port: 3001
