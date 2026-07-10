@@ -46,6 +46,10 @@
 - [3.11.](https://github.com/lindkon/DevOpsWithKubernetes/tree/3.11/the_project)
 - [3.12.](https://github.com/lindkon/DevOpsWithKubernetes/tree/3.12/the_project)
 
+### Chapter 5
+
+- [4.1.](https://github.com/lindkon/DevOpsWithKubernetes/tree/4.1/log_output)
+
 
 ## Commands I will forget
 Create k3d cluster with Gateway:
@@ -144,8 +148,8 @@ You must create a GitHub release where the tag **exactly matches** the exercise 
 
 **Using the command line:**
 
-git tag -a 3.1 -m "Exercise 3.1"
-git push origin 3.1
+git tag -a 4.1 -m "Exercise 4.1"
+git push origin 4.1
 
 *(You can also draft the release and create the tag directly through the GitHub UI under the **Releases** tab.)*
 
