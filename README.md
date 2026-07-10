@@ -48,6 +48,14 @@
 
 
 ## Commands I will forget
+Create k3d cluster with Gateway:
+k3d cluster create --agents 2 -p 8081:80@loadbalancer --port 8082:30080@agent:0 --k3s-arg '--disable=traefik@server:0'
+
+Then:
+kubectl apply --server-side -f https://github.com/envoyproxy/gateway/releases/latest/download/install.yaml
+
+Finally:
+kubectl -n envoy-gateway-system rollout status deployment/envoy-gateway --timeout=180s
 
 Delete cluster when not needed:
 gcloud container clusters delete dwk-cluster --zone=europe-north1-b
