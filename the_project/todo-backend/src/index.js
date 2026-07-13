@@ -8,6 +8,7 @@ const requireEnv = (name) => {
   if (!value) throw new Error(`Missing required env var: ${name}`);
   return value;
 };
+let isHealthy = false;
 
 const PORT = requireEnv('PORT');
 const PGHOST = requireEnv('PGHOST');
@@ -32,6 +33,17 @@ const initTable = async () => {
       created_at TIMESTAMP DEFAULT now()
     )
   `);
+};
+
+const initWithRetry = async () => {
+  try {
+    await initTable();
+    isHealthy = true;
+    console.log('Database initialized');
+  } catch (err) {
+    console.log(`DB not available yet (${err.message}), retrying in 5s`);
+    setTimeout(initWithRetry, 5000);
+  }
 };
 
 const getTodos = async () => {
@@ -66,14 +78,31 @@ const app = new Koa();
 const router = new Router();
 
 router.get('/todos', async (ctx) => {
-  const todos = await getTodos();
-  ctx.status = 200;
-  ctx.body = todos;
+  try {
+    const todos = await getTodos();
+    ctx.status = 200;
+    ctx.body = todos;
+  } catch (err) {
+    isHealthy = false;
+    ctx.status = 500;
+    ctx.body = `error: ${err}`
+  }
+
 });
 
 router.get('/', async (ctx) => {
   ctx.status = 200;
   ctx.body = 'Todo health OK';
+});
+
+router.get('/healthz', async (ctx) => {
+  if (!isHealthy) {
+    ctx.status = 500;
+    ctx.body = {error: 'app unhealthy'};
+  } else {
+    ctx.status = 200;
+    ctx.body = 'Todo health OK';
+  }
 });
 
 router.post('/todos', async (ctx) => {
@@ -90,9 +119,22 @@ router.post('/todos', async (ctx) => {
     return;
   }
 
-  const newTodo = await addTodo(todo.trim());
-  ctx.status = 201;
-  ctx.body = newTodo;
+  try {
+    const newTodo = await addTodo(todo.trim());
+    ctx.status = 201;
+    ctx.body = newTodo;
+  } catch (err) {
+    isHealthy = false;
+    ctx.status = 500;
+    ctx.body = { error: 'failed to save todo' };
+  }
+});
+
+router.post('/break', async (ctx) => {
+  isHealthy = false;
+
+  ctx.status = 200;
+  ctx.body = 'app broken';
 });
 
 app.use(bodyParser());
@@ -100,8 +142,7 @@ app.use(requestLogger);
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-initTable().then(() => {
-  app.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`);
-  });
+app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`);
 });
+initWithRetry();

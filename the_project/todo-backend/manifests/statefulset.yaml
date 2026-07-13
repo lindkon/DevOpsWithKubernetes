@@ -40,7 +40,7 @@ spec:
         name: todo-storage
       spec:
         accessModes: ["ReadWriteOnce"]
-        storageClassName: standard-rwo
+        storageClassName: local-path
         resources:
           requests:
             storage: 256Mi

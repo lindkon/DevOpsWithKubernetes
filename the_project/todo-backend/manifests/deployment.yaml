@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: todo-backend
-          image: lindkon/todo-backend
+          image: lindkon/todo-backend:4.2d
           envFrom:
             - configMapRef:
                 name: todo-backend-config
@@ -26,5 +26,19 @@ spec:
             limits:
               memory: "128Mi"
               cpu: "100m"
+          readinessProbe:
+            initialDelaySeconds: 10 # Initial delay until the readiness is tested
+            periodSeconds: 5 # How often to test
+            httpGet:
+                path: /healthz
+                port: 3001
+          livenessProbe:
+            initialDelaySeconds: 20 # Initial delay until the liveness is tested
+            periodSeconds: 4 # How often to test
+            httpGet:
+               path: /healthz
+               port: 3001
+
+
 
       

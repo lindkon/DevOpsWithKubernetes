@@ -1,100 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Todo App</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #f0f4f8;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-    .container {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
-      padding: 2rem;
-      width: 100%;
-      max-width: 480px;
-    }
-    .container img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 1.2rem;
-      display: block;
-    }
-    h1 { font-size: 1.8rem; margin-bottom: 1.2rem; color: #1a202c; }
-    .input-row {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1.2rem;
-    }
-    input[type="text"] {
-      flex: 1;
-      padding: 0.6rem 0.9rem;
-      border: 1.5px solid #cbd5e0;
-      border-radius: 7px;
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    input[type="text"]:focus { border-color: #667eea; }
-    button {
-      padding: 0.6rem 1.1rem;
-      background: #667eea;
-      color: white;
-      border: none;
-      border-radius: 7px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    button:hover { background: #5a67d8; }
-    ul { list-style: none; }
-    li {
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-      padding: 0.6rem 0;
-      border-bottom: 1px solid #e2e8f0;
-      font-size: 1rem;
-      color: #2d3748;
-    }
-    li:last-child { border-bottom: none; }
-    li.done span { text-decoration: line-through; color: #a0aec0; }
-    li input[type="checkbox"] { accent-color: #667eea; width: 1.1em; height: 1.1em; }
-    .del {
-      margin-left: auto;
-      background: none;
-      color: #fc8181;
-      font-size: 1.1rem;
-      padding: 0 0.3rem;
-    }
-    .del:hover { background: none; color: #e53e3e; }
-    .empty { color: #a0aec0; text-align: center; padding: 1rem 0; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Todo App</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f4f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    padding: 2rem;
+    width: 100%;
+    max-width: 480px;
+  }
+  .container img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1.2rem;
+    display: block;
+  }
+  h1 { font-size: 1.8rem; margin-bottom: 1.2rem; color: #1a202c; }
+  #todo-form {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.2rem;
+  }
+  input[type="text"] {
+    flex: 1;
+    padding: 0.6rem 0.9rem;
+    border: 1.5px solid #cbd5e0;
+    border-radius: 7px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input[type="text"]:focus { border-color: #667eea; }
+  button {
+    padding: 0.6rem 1.1rem;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 7px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  button:hover { background: #5a67d8; }
+  ul { list-style: none; }
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 1rem;
+    color: #2d3748;
+  }
+  li:last-child { border-bottom: none; }
+  .empty { color: #a0aec0; text-align: center; padding: 1rem 0; }
+
+  .break-row {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px dashed #e2e8f0;
+    text-align: center;
+  }
+  .break-btn {
+    background: #fff5f5;
+    color: #e53e3e;
+    border: 1.5px solid #fc8181;
+  }
+  .break-btn:hover { background: #fc8181; color: white; }
+
+  #broken-view { display: none; text-align: center; }
+  #broken-view h1 { margin-bottom: 0.6rem; }
+  #broken-view p { color: #718096; }
+</style>
 </head>
 <body>
   <div class="container">
-    <img src="/image.jpg" alt="Random image" />
-    <h1>📝 Todo App</h1>
-    <form id="todo-form">
-      <input type="text" id="newTodo" placeholder="Add a new task..." maxlength="140"/>
-      <button type="submit">Add</button>
-    </form>
-    <ul id="todoList"><li class="empty">No tasks yet. Add one above!</li></ul>
+
+    <div id="app-view">
+      <img src="/image.jpg" alt="Random image" />
+      <h1>📝 Todo App</h1>
+      <form id="todo-form">
+        <input type="text" id="newTodo" placeholder="Add a new task..." maxlength="140"/>
+        <button type="submit">Add</button>
+      </form>
+      <ul id="todoList"><li class="empty">No tasks yet. Add one above!</li></ul>
+      <div class="break-row">
+        <button type="button" class="break-btn" id="breakBtn">💥 Break the app</button>
+      </div>
+    </div>
+
+    <div id="broken-view">
+      <h1>🚧 App broken</h1>
+      <p>The backend is unavailable. Retrying automatically…</p>
+    </div>
+
   </div>
+
 <script>
+  const appView = document.getElementById('app-view');
+  const brokenView = document.getElementById('broken-view');
+  let retryTimer = null;
+
+  function showBroken() {
+    appView.style.display = 'none';
+    brokenView.style.display = 'block';
+    if (!retryTimer) retryTimer = setInterval(loadTodos, 5000);
+  }
+
+  function showApp() {
+    brokenView.style.display = 'none';
+    appView.style.display = 'block';
+    if (retryTimer) { clearInterval(retryTimer); retryTimer = null; }
+  }
+
   async function loadTodos() {
-    const res = await fetch('/todos');
-    const todos = await res.json();
+    let todos;
+    try {
+      const res = await fetch('/todos');
+      if (!res.ok) { showBroken(); return; }
+      todos = await res.json();
+    } catch {
+      showBroken();
+      return;
+    }
+
+    showApp();
     const list = document.getElementById('todoList');
     list.innerHTML = '';
 
@@ -117,13 +162,23 @@
     const input = document.getElementById('newTodo');
     if (!input.value.trim()) return;
 
-    await fetch('/todos', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ todo: input.value }),
-    });
-    input.value = '';
-    loadTodos();
+    try {
+      const res = await fetch('/todos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ todo: input.value }),
+      });
+      if (res.status >= 500) { showBroken(); return; }
+      input.value = '';
+      loadTodos();
+    } catch {
+      showBroken();
+    }
+  });
+
+  document.getElementById('breakBtn').addEventListener('click', async () => {
+    try { await fetch('/break', { method: 'POST' }); } catch {}
+    showBroken();
   });
 
   loadTodos();

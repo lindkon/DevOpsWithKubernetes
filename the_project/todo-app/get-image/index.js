@@ -53,9 +53,7 @@ const checkAndUpdate = async () => {
   if (age > MAX_IMAGE_AGE_MS) {
     console.log(`Image is ${Math.round(age / 1000)}s old, refreshing`);
     await fetchNewImage().catch(err => console.log('Fetch failed:', err.message));
-  } else {
-    console.log(`Image is ${Math.round(age / 1000)}s old, still fresh`);
-  }
+  } 
 };
 
 console.log('Started image refresher');

@@ -38,6 +38,17 @@ const server = http.createServer(async (req, res) => {
       res.statusCode = 404;
       res.end('Not Found');
     }
+  } else if (req.method === 'GET' && req.url === '/healthz') {
+    try {
+      const image = await getFile(IMAGE_PATH);
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'text/plain');
+      res.end('Main app health ok');
+    } catch (err) {
+      res.statusCode = 404;
+      res.setHeader('Content-Type', 'text/plain');
+      res.end('Not Found');
+    }
   } else {
     res.statusCode = 404;
     res.setHeader('Content-Type', 'text/plain');

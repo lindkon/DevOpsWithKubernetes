@@ -6,6 +6,8 @@ metadata:
 spec:
   parentRefs:
   - name: project-gateway
+  hostnames:
+    - project.localhost
   rules:
     - matches:
       - path:
@@ -15,6 +17,9 @@ spec:
       - name: todo-app-svc
         port: 80
     - matches:
+      - path:
+          type: PathPrefix
+          value: /break
       - path:
           type: PathPrefix
           value: /todos
