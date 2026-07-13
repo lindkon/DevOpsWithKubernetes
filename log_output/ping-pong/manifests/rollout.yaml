@@ -1,5 +1,5 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   name: ping-pong
   namespace: exercises
@@ -8,6 +8,12 @@ spec:
   selector:
     matchLabels:
       app: ping-pong
+  strategy:
+    canary:
+      steps:
+        - analysis:
+            templates:
+              - templateName: cpu-usage
   template:
     metadata:
       labels:
@@ -20,8 +26,8 @@ spec:
             - configMapRef:
                 name: ping-pong-config
           readinessProbe:
-            initialDelaySeconds: 10 # Initial delay until the readiness is tested
-            periodSeconds: 5 # How often to test
+            initialDelaySeconds: 10
+            periodSeconds: 5
             httpGet:
-               path: /healthz
-               port: 3001
+              path: /healthz
+              port: 3001

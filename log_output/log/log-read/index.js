@@ -8,7 +8,7 @@ const directory = path.join('/', 'usr', 'src', 'app', 'files');
 const filePath = path.join('/', 'etc', 'config', 'information.txt');
 const logPath = path.join(directory, 'log.txt');
 
-const getFile = async (filePath) => new Promise(res => {
+const getFile = (filePath) => new Promise((resolve, reject) => {
   fs.readFile(filePath, (err, buffer) => {
     if (err) return reject(err);
     resolve(buffer);

@@ -22,13 +22,13 @@ spec:
             name: configmap
       containers:
         - name: log-write
-          image: lindkon/log-write:4.1
+          image: lindkon/log-write
           env:
           volumeMounts:
             - name: log-storage
               mountPath: /usr/src/app/files
         - name: log-read
-          image: lindkon/log-read:4.1b
+          image: lindkon/log-read
           env:
             - name: PORT
               value: "3000"

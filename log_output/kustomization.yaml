@@ -5,13 +5,13 @@ resources:
   # infra
   - manifests/gateway.yaml
   - manifests/persistentvolume.yaml
-  - manifests/pvc.yaml
+  - manifests/persistentVolumeClaim.yaml
   - manifests/route.yaml
   # ping-pong
-  - ping-pong/manifests/analysis-template.yam
+  - ping-pong/manifests/analysis-template.yaml
   - ping-pong/manifests/configmap.yaml
-  - ping-pong/manifests/deployment.yaml
   - ping-pong/manifests/headless-service.yaml
+  - ping-pong/manifests/rollout.yaml
   - ping-pong/manifests/service.yaml
   - ping-pong/manifests/statefulset.yaml
   # logging
@@ -21,6 +21,6 @@ images:
   - name: lindkon/log-write
     newTag: "4.1"
   - name: lindkon/log-read
-    newTag: "4.1b"
+    newTag: "4.4"
   - name: lindkon/ping-pong
-    newTag: "4.1b"
+    newTag: "4.4b"
