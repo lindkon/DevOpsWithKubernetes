@@ -21,7 +21,7 @@ spec:
             claimName: project-claim
       containers:
         - name: todo-main
-          image: lindkon/todo-main:4.2b
+          image: lindkon/todo-main
           volumeMounts:
             - name: image-storage
               mountPath: /usr/src/app/files
@@ -61,7 +61,7 @@ spec:
                   name: todo-app-config
                   key: IMAGE_FILENAME
         - name: get-image
-          image: lindkon/get-image:4.2
+          image: lindkon/get-image
           resources: 
             requests:
               memory: "50Mi"

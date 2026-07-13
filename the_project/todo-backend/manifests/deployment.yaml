@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: todo-backend
-          image: lindkon/todo-backend:4.2d
+          image: lindkon/todo-backend
           envFrom:
             - configMapRef:
                 name: todo-backend-config

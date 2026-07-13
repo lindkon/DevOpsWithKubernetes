@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: exercises
+resources:
+  # infra
+  - manifests/gateway.yaml
+  - manifests/persistentvolume.yaml
+  - manifests/pvc.yaml
+  - manifests/route.yaml
+  # ping-pong
+  - ping-pong/manifests/analysis-template.yam
+  - ping-pong/manifests/configmap.yaml
+  - ping-pong/manifests/deployment.yaml
+  - ping-pong/manifests/headless-service.yaml
+  - ping-pong/manifests/service.yaml
+  - ping-pong/manifests/statefulset.yaml
+  # logging
+  - log/manifests/deployment.yaml
+  - log/manifests/service.yaml
+images:
+  - name: lindkon/log-write
+    newTag: "4.1"
+  - name: lindkon/log-read
+    newTag: "4.1b"
+  - name: lindkon/ping-pong
+    newTag: "4.1b"

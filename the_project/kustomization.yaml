@@ -4,6 +4,7 @@ namespace: project
 resources:
   # infra
   - manifests/gateway.yaml
+  - manifests/persistentvolume.yaml
   - manifests/pvc.yaml
   - manifests/route.yaml
   # app
@@ -20,8 +21,8 @@ resources:
   - todo-backend/manifests/cronjob.yaml
 images:
   - name: lindkon/todo-backend
-    newTag: "3.5c"
+    newTag: "4.2d"
   - name: lindkon/todo-main
-    newTag: "3.5"
+    newTag: "4.2b"
   - name: lindkon/get-image
-    newTag: "3.5"
+    newTag: "4.2"

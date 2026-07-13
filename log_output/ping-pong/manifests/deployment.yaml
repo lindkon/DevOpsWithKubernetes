@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: ping-pong
-          image: lindkon/ping-pong:4.1b
+          image: lindkon/ping-pong
           envFrom:
             - configMapRef:
                 name: ping-pong-config
