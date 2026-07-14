@@ -21,8 +21,8 @@ resources:
   - todo-backend/manifests/cronjob.yaml
 images:
   - name: lindkon/todo-backend
-    newTag: "4.2d"
+    newTag: "4.5"
   - name: lindkon/todo-main
-    newTag: "4.2b"
+    newTag: "4.5"
   - name: lindkon/get-image
     newTag: "4.2"

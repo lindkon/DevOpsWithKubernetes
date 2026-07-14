@@ -69,7 +69,16 @@
   }
   li:last-child { border-bottom: none; }
   .empty { color: #a0aec0; text-align: center; padding: 1rem 0; }
-
+  li input[type="checkbox"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: #667eea;
+  cursor: pointer;
+  }
+  .done {
+    text-decoration: line-through;
+    color: #a0aec0;
+  }
   .break-row {
     margin-top: 1.5rem;
     padding-top: 1rem;
@@ -150,12 +159,35 @@
 
     todos.forEach(t => {
       const li = document.createElement('li');
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = t.isDone;
+      checkbox.addEventListener('change', () => toggleTodo(t.id, checkbox.checked));
+
       const span = document.createElement('span');
       span.textContent = t.text;
+      if (t.isDone) span.classList.add('done');
+
+      li.appendChild(checkbox);
       li.appendChild(span);
       list.appendChild(li);
     });
   }
+
+  async function toggleTodo(id, isDone) {
+  try {
+    const res = await fetch(`/todos/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ isDone }),
+    });
+    if (res.status >= 500) { showBroken(); return; }
+    loadTodos();
+  } catch {
+    showBroken();
+  }
+}
 
   document.getElementById('todo-form').addEventListener('submit', async (e) => {
     e.preventDefault();

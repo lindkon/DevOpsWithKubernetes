@@ -30,6 +30,7 @@ const initTable = async () => {
     CREATE TABLE IF NOT EXISTS todos (
       id SERIAL PRIMARY KEY,
       text TEXT NOT NULL,
+      is_done BOOLEAN DEFAULT false,
       created_at TIMESTAMP DEFAULT now()
     )
   `);
@@ -47,7 +48,7 @@ const initWithRetry = async () => {
 };
 
 const getTodos = async () => {
-  const result = await pool.query('SELECT id, text FROM todos ORDER BY id ASC');
+  const result = await pool.query('SELECT id, text, is_done AS "isDone" FROM todos ORDER BY id ASC');
   return result.rows;
 };
 
@@ -55,6 +56,14 @@ const addTodo = async (text) => {
   const result = await pool.query(
     'INSERT INTO todos (text) VALUES ($1) RETURNING id, text',
     [text]
+  );
+  return result.rows[0];
+};
+
+const toggleTodo = async (id, isDone) => {
+  const result = await pool.query(
+    'UPDATE todos SET is_done = $1 WHERE id = $2 RETURNING *',
+    [isDone, id]
   );
   return result.rows[0];
 };
@@ -127,6 +136,24 @@ router.post('/todos', async (ctx) => {
     isHealthy = false;
     ctx.status = 500;
     ctx.body = { error: 'failed to save todo' };
+  }
+});
+
+router.put(`/todos/:id`, async (ctx) => {
+  const { id } = ctx.params
+  const { isDone } = ctx.request.body
+  try {
+    const todoUpdate = await toggleTodo(id, isDone)
+    if (!todoUpdate) {
+      ctx.status = 404;
+      ctx.body = { error: 'todo not found' };
+      return;
+    }
+    ctx.status = 200;
+    ctx.body = 'ok';
+  } catch (err) {
+    ctx.status = 500;
+    ctx.body = { error: 'failed to update todo' };
   }
 });
 

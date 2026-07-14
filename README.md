@@ -52,6 +52,7 @@
 - [4.2.](https://github.com/lindkon/DevOpsWithKubernetes/tree/4.2/the_project)
 - [4.3.](https://github.com/lindkon/DevOpsWithKubernetes/tree/4.3/log_output)
 - [4.4.](https://github.com/lindkon/DevOpsWithKubernetes/tree/4.4/log_output)
+- [4.5.](https://github.com/lindkon/DevOpsWithKubernetes/tree/4.5/the_project)
 
 
 ## Commands I will forget
@@ -77,6 +78,8 @@ spec:
   controllerName: gateway.envoyproxy.io/gatewayclass-controller
 EOF
 
+View project db:
+kubectl exec -it todo-db-0 -n project -- psql -U todos -d todos          
 
 Delete cluster when not needed:
 gcloud container clusters delete dwk-cluster --zone=europe-north1-b
