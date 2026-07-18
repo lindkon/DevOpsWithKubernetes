@@ -22,9 +22,9 @@ jobs:
       # tag image with the GitHub SHA to get a unique tag
       - name: Build and publish backend
         run: |-
-          docker build --tag "lindkon/log-write:$GITHUB_SHA" log/log-write
-          docker build --tag "lindkon/log-read:$GITHUB_SHA" log/log-read
-          docker build --tag "lindkon/ping-pong:$GITHUB_SHA" ping-pong/
+          docker build --tag "lindkon/log-write:$GITHUB_SHA" log_output/log/log-write
+          docker build --tag "lindkon/log-read:$GITHUB_SHA" log_output/log/log-read
+          docker build --tag "lindkon/ping-pong:$GITHUB_SHA" log_output/ping-pong
           docker push "lindkon/log-write:$GITHUB_SHA"
           docker push "lindkon/log-read:$GITHUB_SHA"
           docker push "lindkon/ping-pong:$GITHUB_SHA"
@@ -33,6 +33,7 @@ jobs:
         uses: imranismail/setup-kustomize@v3
 
       - name: Use right image
+        working-directory: log_output
         run: |-
           kustomize edit set image lindkon/log-write=lindkon/log-write:$GITHUB_SHA
           kustomize edit set image lindkon/log-read=lindkon/log-read:$GITHUB_SHA
@@ -41,5 +42,5 @@ jobs:
       - name: commit kustomization.yaml to GitHub
         uses: EndBug/add-and-commit@v10
         with:
-          add: 'kustomization.yaml'
-          message: New version released ${{ github.sha }}
+          add: 'log_output/kustomization.yaml'
+          message: 'New version released ${{ github.sha }} [skip ci]'
