@@ -36,8 +36,7 @@ const server =  http.createServer( async (req, res) => {
         `file content: ${fileInfo}\n` +
         `env variable: ${message}\n` +
         `${currentStatus}\n` +
-        `Ping / Pongs: ${pongCount}\n` +
-        'speed test'
+        `Ping / Pongs: ${pongCount}`
       );
     } else if (req.method === 'GET' && req.url === '/healthz') {
       const pongCount = await getPongCount();
