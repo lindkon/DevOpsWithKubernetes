@@ -130,6 +130,9 @@ npm install pg --save
 
 change namespace with kubens and cluster with kubectx
 
+to skip actions on commit add: 
+[skip ci]
+
 sops encrypt:
 
 sops --encrypt \
