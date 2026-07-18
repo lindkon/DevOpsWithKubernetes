@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broadcaster
+  namespace: project
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: broadcaster
+  template:
+    metadata:
+      labels:
+        app: broadcaster
+    spec:
+      containers:
+        - name: broadcaster
+          image: lindkon/broadcaster
+          env:
+            - name: NATS_URL
+              value: nats://my-nats.nats.svc.cluster.local:4222
+            - name: NODE_OPTIONS
+              value: --dns-result-order=ipv4first
+          envFrom:
+            - secretRef:
+                name: broadcaster-secret
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "50m"
+            limits:
+              memory: "64Mi"
+              cpu: "100m"

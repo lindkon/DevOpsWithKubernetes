@@ -24,7 +24,7 @@ spec:
             - configMapRef:
                 name: todo-backend-config
             - secretRef:
-                name: todo-db-secret
+                name: todo-secret
           volumeMounts:
             - name: todo-storage
               mountPath: /var/lib/postgresql

@@ -19,10 +19,15 @@ resources:
   - todo-backend/manifests/headless-service.yaml
   - todo-backend/manifests/statefulset.yaml
   - todo-backend/manifests/cronjob.yaml
+  # NATS broadcaster
+  - broadcaster/manifests/deployment.yaml
+  - broadcaster/manifests/secret.yaml
 images:
   - name: lindkon/todo-backend
-    newTag: "4.5"
+    newTag: "4.6b"
   - name: lindkon/todo-main
     newTag: "4.5"
   - name: lindkon/get-image
     newTag: "4.2"
+  - name: lindkon/broadcaster
+    newTag: "4.6e"

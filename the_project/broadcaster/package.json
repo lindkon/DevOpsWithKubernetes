@@ -1,5 +1,5 @@
 {
-  "name": "todo-backend",
+  "name": "broadcaster",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,10 +11,6 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "koa": "^3.2.1",
-    "koa-bodyparser": "^4.4.1",
-    "koa-router": "^14.0.0",
-    "nats": "^2.29.3",
-    "pg": "^8.22.0"
+    "nats": "^2.29.3"
   }
 }

@@ -19,6 +19,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: todo-backend-config
+            - secretRef:
+                name: todo-secret
           resources:
             requests:
               memory: "64Mi"

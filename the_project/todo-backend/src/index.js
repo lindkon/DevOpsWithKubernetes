@@ -2,6 +2,7 @@ const Koa = require('koa');
 const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
 const { Pool } = require('pg');
+const { connect } = require('nats');
 
 const requireEnv = (name) => {
   const value = process.env[name];
@@ -9,6 +10,7 @@ const requireEnv = (name) => {
   return value;
 };
 let isHealthy = false;
+let natsConnection = null;
 
 const PORT = requireEnv('PORT');
 const PGHOST = requireEnv('PGHOST');
@@ -16,6 +18,18 @@ const PGPORT = requireEnv('PGPORT');
 const PGDATABASE = requireEnv('PGDATABASE');
 const PGUSER = requireEnv('PGUSER');
 const PGPASSWORD = requireEnv('POSTGRES_PASSWORD');
+const NATS_URL = requireEnv('NATS_URL');
+
+
+const initNats = async () => {
+  try {
+    natsConnection = await connect({ servers: NATS_URL });
+    console.log(`Connected to NATS at ${NATS_URL}`);
+  } catch (err) {
+    console.log(`NATS not available (${err.message}), retrying in 5s`);
+    setTimeout(initNats, 5000);
+  }
+};
 
 const pool = new Pool({
   host: PGHOST,
@@ -24,6 +38,18 @@ const pool = new Pool({
   user: PGUSER,
   password: PGPASSWORD,
 });
+
+const publishTodoEvent = (action, todo) => {
+  if (!natsConnection) return; 
+  try {
+    natsConnection.publish(
+      'todos.events',
+      JSON.stringify({ action, todo })
+    );
+  } catch (err) {
+    console.log(`Failed to publish NATS message: ${err.message}`);
+  }
+};
 
 const initTable = async () => {
   await pool.query(`
@@ -130,6 +156,7 @@ router.post('/todos', async (ctx) => {
 
   try {
     const newTodo = await addTodo(todo.trim());
+    publishTodoEvent('created', newTodo.id);
     ctx.status = 201;
     ctx.body = newTodo;
   } catch (err) {
@@ -149,6 +176,7 @@ router.put(`/todos/:id`, async (ctx) => {
       ctx.body = { error: 'todo not found' };
       return;
     }
+    publishTodoEvent('updated', id);
     ctx.status = 200;
     ctx.body = 'ok';
   } catch (err) {
@@ -159,7 +187,6 @@ router.put(`/todos/:id`, async (ctx) => {
 
 router.post('/break', async (ctx) => {
   isHealthy = false;
-
   ctx.status = 200;
   ctx.body = 'app broken';
 });
@@ -173,3 +200,4 @@ app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });
 initWithRetry();
+initNats();
