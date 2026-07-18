@@ -20,10 +20,10 @@ resources:
 images:
 - name: lindkon/log-read
   newName: lindkon/log-read
-  newTag: 102d3b3625e7fc6315e86bc6d2a07263d8428fcf
+  newTag: 609803fa63d9c37debd2d70cef887a1af58ce597
 - name: lindkon/log-write
   newName: lindkon/log-write
-  newTag: 102d3b3625e7fc6315e86bc6d2a07263d8428fcf
+  newTag: 609803fa63d9c37debd2d70cef887a1af58ce597
 - name: lindkon/ping-pong
   newName: lindkon/ping-pong
-  newTag: 102d3b3625e7fc6315e86bc6d2a07263d8428fcf
+  newTag: 609803fa63d9c37debd2d70cef887a1af58ce597
