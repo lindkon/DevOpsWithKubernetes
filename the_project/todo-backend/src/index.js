@@ -19,6 +19,7 @@ const PGDATABASE = requireEnv('PGDATABASE');
 const PGUSER = requireEnv('PGUSER');
 const PGPASSWORD = requireEnv('POSTGRES_PASSWORD');
 const NATS_URL = requireEnv('NATS_URL');
+const NATS_SUBJECT = process.env.NATS_SUBJECT || 'todos.events';
 
 
 const initNats = async () => {
@@ -43,7 +44,7 @@ const publishTodoEvent = (action, todo) => {
   if (!natsConnection) return; 
   try {
     natsConnection.publish(
-      'todos.events',
+      NATS_SUBJECT,
       JSON.stringify({ action, todo })
     );
   } catch (err) {

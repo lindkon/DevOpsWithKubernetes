@@ -7,19 +7,34 @@ resources:
 - route.yaml
 
 patches:
-- patch: |-
-    apiVersion: apps/v1
-    kind: Deployment
-    metadata:
-      name: broadcaster
-    spec:
-      template:
-        spec:
-          containers:
-            - name: broadcaster
-              env:
-                - name: LOG_ONLY
-                  value: "true"
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: broadcaster
+      spec:
+        template:
+          spec:
+            containers:
+              - name: broadcaster
+                env:
+                  - name: LOG_ONLY
+                    value: "true"
+                  - name: NATS_SUBJECT
+                    value: todos.events.staging
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: todo-backend
+      spec:
+        template:
+          spec:
+            containers:
+              - name: todo-backend
+                env:
+                  - name: NATS_SUBJECT
+                    value: todos.events.staging
 images:
 - name: lindkon/broadcaster
   newName: lindkon/broadcaster

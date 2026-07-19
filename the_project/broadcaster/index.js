@@ -10,6 +10,7 @@ const NATS_URL = requireEnv('NATS_URL');
 const LOG_ONLY = requireEnv('LOG_ONLY') === 'true';
 const BOT_TOKEN = requireEnv('TG_TOKEN');
 const CHAT_ID = requireEnv('TG_CHAT_ID');
+const NATS_SUBJECT = process.env.NATS_SUBJECT || 'todos.events';
 
 
 const sendToTelegram = async (text) => {
@@ -33,7 +34,7 @@ const formatMessage = ({ action, todo }) => {
 const run = async () => {
   const nc = await connect({ servers: NATS_URL });
   console.log(`Connected to NATS at ${NATS_URL}`);
-  const sub = nc.subscribe('todos.events', { queue: 'broadcaster' });
+  const sub = nc.subscribe(NATS_SUBJECT, { queue: 'broadcaster' });
   for await (const msg of sub) {
     try {
       const event = JSON.parse(msg.data);
