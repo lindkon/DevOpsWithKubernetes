@@ -159,8 +159,8 @@ You must create a GitHub release where the tag **exactly matches** the exercise 
 
 **Using the command line:**
 
-git tag -a 4.1 -m "Exercise 4.1"
-git push origin 4.1 [skip ci]
+git tag -a 4.1 -m "Exercise 4.1 [skip ci]"
+git push origin 4.1
 
 *(You can also draft the release and create the tag directly through the GitHub UI under the **Releases** tab.)*
 
