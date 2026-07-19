@@ -7,8 +7,10 @@ const requireEnv = (name) => {
 };
 
 const NATS_URL = requireEnv('NATS_URL');
+const LOG_ONLY = requireEnv('LOG_ONLY') === 'true';
 const BOT_TOKEN = requireEnv('TG_TOKEN');
 const CHAT_ID = requireEnv('TG_CHAT_ID');
+
 
 const sendToTelegram = async (text) => {
   const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
@@ -23,8 +25,8 @@ const sendToTelegram = async (text) => {
 };
 
 const formatMessage = ({ action, todo }) => {
-  if (action === 'created') return `todo ${todo} was created`;
-  if (action === 'updated') return `todo ${todo} was updated`;
+  if (action === 'created') return `todo ${todo.id} was created, body; ${todo.text}`;
+  if (action === 'updated') return `todo ${todo.id} was updated, status; ${todo.isDone}`;
   return `Unknown todo event occurred`;
 };
 
@@ -36,6 +38,7 @@ const run = async () => {
     try {
       const event = JSON.parse(msg.data);
       console.log(`Received event: ${JSON.stringify(event)}`);
+      if (LOG_ONLY) continue;
       await sendToTelegram(formatMessage(event));
       console.log('Sent to Telegram');
     } catch (err) {

@@ -88,7 +88,7 @@ const addTodo = async (text) => {
 
 const toggleTodo = async (id, isDone) => {
   const result = await pool.query(
-    'UPDATE todos SET is_done = $1 WHERE id = $2 RETURNING *',
+    'UPDATE todos SET is_done = $1 WHERE id = $2 RETURNING id, text, is_done AS "isDone"',
     [isDone, id]
   );
   return result.rows[0];
@@ -156,7 +156,7 @@ router.post('/todos', async (ctx) => {
 
   try {
     const newTodo = await addTodo(todo.trim());
-    publishTodoEvent('created', newTodo.id);
+    publishTodoEvent('created', newTodo);
     ctx.status = 201;
     ctx.body = newTodo;
   } catch (err) {
@@ -176,7 +176,7 @@ router.put(`/todos/:id`, async (ctx) => {
       ctx.body = { error: 'todo not found' };
       return;
     }
-    publishTodoEvent('updated', id);
+    publishTodoEvent('updated', todoUpdate);
     ctx.status = 200;
     ctx.body = 'ok';
   } catch (err) {

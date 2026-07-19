@@ -37,7 +37,7 @@ jobs:
         uses: imranismail/setup-kustomize@v3
 
       - name: Use right image
-        working-directory: the_project
+        working-directory: the_project/base
         run: |-
           kustomize edit set image lindkon/broadcaster=lindkon/broadcaster:$GITHUB_SHA
           kustomize edit set image lindkon/todo-backend=lindkon/todo-backend:$GITHUB_SHA
@@ -47,5 +47,5 @@ jobs:
       - name: commit kustomization.yaml to GitHub
         uses: EndBug/add-and-commit@v10
         with:
-          add: 'the_project/kustomization.yaml'
+          add: 'the_project/base/kustomization.yaml'
           message: 'New version released ${{ github.sha }} [skip ci]'

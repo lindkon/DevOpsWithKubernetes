@@ -21,6 +21,8 @@ spec:
               value: nats://my-nats.nats.svc.cluster.local:4222
             - name: NODE_OPTIONS
               value: --dns-result-order=ipv4first
+            - name: LOG_ONLY
+              value: "false"
           envFrom:
             - secretRef:
                 name: broadcaster-secret

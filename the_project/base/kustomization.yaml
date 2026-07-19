@@ -1,28 +1,13 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: project
   ### IMPORTANT ###
   # Secrets are not in kustomize, must be deployed manually when changed.
-  # infra
-  # app
-  # backend
-  # NATS broadcaster
 
 resources:
-- manifests/gateway.yaml
-- manifests/persistentvolume.yaml
-- manifests/pvc.yaml
-- manifests/route.yaml
-- todo-app/manifests/configmap.yaml
-- todo-app/manifests/deployment.yaml
-- todo-app/manifests/service.yaml
-- todo-backend/manifests/configmap.yaml
-- todo-backend/manifests/deployment.yaml
-- todo-backend/manifests/service.yaml
-- todo-backend/manifests/headless-service.yaml
-- todo-backend/manifests/statefulset.yaml
-- todo-backend/manifests/cronjob.yaml
-- broadcaster/manifests/deployment.yaml
+  - ../manifests
+  - ../todo-app/manifests
+  - ../todo-backend/manifests
+  - ../broadcaster/manifests
 images:
 - name: lindkon/broadcaster
   newName: lindkon/broadcaster
