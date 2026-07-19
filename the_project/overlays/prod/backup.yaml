@@ -19,12 +19,12 @@ spec:
               command: ["/bin/sh", "-c"]
               args:
                 args:
-                - |
-                  set -e
-                  FILE=/backup/todo-$(date +%Y-%m-%d-%H%M%S).sql
-                  pg_dump > "$FILE"
-                  test -s "$FILE"
-                  echo "Backup OK: $(ls -lh "$FILE")"
+                  - |
+                    set -e
+                    FILE=/backup/todo-$(date +%Y-%m-%d-%H%M%S).sql
+                    pg_dump > "$FILE"
+                    test -s "$FILE"
+                    echo "Backup OK: $(ls -lh "$FILE")"
               envFrom:
                 - configMapRef:
                     name: todo-backend-config
