@@ -3,29 +3,33 @@ kind: Kustomization
 namespace: project-staging
 
 resources:
-  - ../../base
-  - route.yaml
+- ../../base
+- route.yaml
 
 patches:
-  - patch: |-
-      apiVersion: apps/v1
-      kind: Deployment
-      metadata:
-        name: broadcaster
-      spec:
-        template:
-          spec:
-            containers:
-              - name: broadcaster
-                env:
-                  - name: LOG_ONLY
-                    value: "true"
+- patch: |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: broadcaster
+    spec:
+      template:
+        spec:
+          containers:
+            - name: broadcaster
+              env:
+                - name: LOG_ONLY
+                  value: "true"
 images:
 - name: lindkon/broadcaster
-  newTag: de963f05892a1116ac8af6409ab77cb46f37f77e
+  newName: lindkon/broadcaster
+  newTag: cce6ce425d01b6a1e6cd8ec7c17b2a0f17d9318b
 - name: lindkon/get-image
-  newTag: de963f05892a1116ac8af6409ab77cb46f37f77e
+  newName: lindkon/get-image
+  newTag: cce6ce425d01b6a1e6cd8ec7c17b2a0f17d9318b
 - name: lindkon/todo-backend
-  newTag: de963f05892a1116ac8af6409ab77cb46f37f77e
+  newName: lindkon/todo-backend
+  newTag: cce6ce425d01b6a1e6cd8ec7c17b2a0f17d9318b
 - name: lindkon/todo-main
-  newTag: de963f05892a1116ac8af6409ab77cb46f37f77e
+  newName: lindkon/todo-main
+  newTag: cce6ce425d01b6a1e6cd8ec7c17b2a0f17d9318b
