@@ -1,5 +1,9 @@
 name: Build and publish application
 
+concurrency:
+  group: build-publish
+  cancel-in-progress: false
+
 on:
   push:
     branches: [main]
@@ -42,6 +46,10 @@ jobs:
           kustomize edit set image lindkon/todo-main=lindkon/todo-main:$GITHUB_SHA
           kustomize edit set image lindkon/get-image=lindkon/get-image:$GITHUB_SHA
 
+      - name: Rebase on latest main
+        run: |-
+          git pull --rebase origin main
+     
       - name: commit kustomization.yaml to GitHub
         uses: EndBug/add-and-commit@v10
         with:
