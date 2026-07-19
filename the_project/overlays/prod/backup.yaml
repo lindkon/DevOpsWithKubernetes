@@ -18,11 +18,13 @@ spec:
               image: postgres:18-alpine
               command: ["/bin/sh", "-c"]
               args:
+                args:
                 - |
                   set -e
-                  pg_dump > /backup/todo-$(date +%Y-%m-%d-%H%M%S).sql
-                  test -s /backup/todo-*.sql
-                  echo "Backup OK: $(ls -lh /backup | tail -1)"
+                  FILE=/backup/todo-$(date +%Y-%m-%d-%H%M%S).sql
+                  pg_dump > "$FILE"
+                  test -s "$FILE"
+                  echo "Backup OK: $(ls -lh "$FILE")"
               envFrom:
                 - configMapRef:
                     name: todo-backend-config
