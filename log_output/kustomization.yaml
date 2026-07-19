@@ -5,7 +5,6 @@ namespace: exercises
   # ping-pong
   # logging
 resources:
-- manifests/gateway.yaml
 - manifests/persistentvolume.yaml
 - manifests/persistentVolumeClaim.yaml
 - manifests/route.yaml

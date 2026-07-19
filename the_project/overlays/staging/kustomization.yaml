@@ -20,3 +20,12 @@ patches:
                 env:
                   - name: LOG_ONLY
                     value: "true"
+images:
+- name: lindkon/broadcaster
+  newTag: de963f05892a1116ac8af6409ab77cb46f37f77e
+- name: lindkon/get-image
+  newTag: de963f05892a1116ac8af6409ab77cb46f37f77e
+- name: lindkon/todo-backend
+  newTag: de963f05892a1116ac8af6409ab77cb46f37f77e
+- name: lindkon/todo-main
+  newTag: de963f05892a1116ac8af6409ab77cb46f37f77e

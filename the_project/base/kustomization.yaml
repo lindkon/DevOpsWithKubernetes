@@ -8,16 +8,4 @@ resources:
 - ../todo-app/manifests
 - ../todo-backend/manifests
 - ../broadcaster/manifests
-images:
-- name: lindkon/broadcaster
-  newName: lindkon/broadcaster
-  newTag: de963f05892a1116ac8af6409ab77cb46f37f77e
-- name: lindkon/get-image
-  newName: lindkon/get-image
-  newTag: de963f05892a1116ac8af6409ab77cb46f37f77e
-- name: lindkon/todo-backend
-  newName: lindkon/todo-backend
-  newTag: de963f05892a1116ac8af6409ab77cb46f37f77e
-- name: lindkon/todo-main
-  newName: lindkon/todo-main
-  newTag: de963f05892a1116ac8af6409ab77cb46f37f77e
+
