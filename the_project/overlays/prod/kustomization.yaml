@@ -3,17 +3,17 @@ kind: Kustomization
 namespace: project-prod
 
 resources:
-  - ../../base
-  - backup.yaml
-  - backup-pvc.yaml
-  - route.yaml
+- ../../base
+- backup.yaml
+- backup-pvc.yaml
+- route.yaml
 
 images:
 - name: lindkon/broadcaster
-  newTag: de963f05892a1116ac8af6409ab77cb46f37f77e
+  newTag: 2c1a20ed59774f79ce0e7e4671d3949030bbb032
 - name: lindkon/get-image
-  newTag: de963f05892a1116ac8af6409ab77cb46f37f77e
+  newTag: 2c1a20ed59774f79ce0e7e4671d3949030bbb032
 - name: lindkon/todo-backend
-  newTag: de963f05892a1116ac8af6409ab77cb46f37f77e
+  newTag: 2c1a20ed59774f79ce0e7e4671d3949030bbb032
 - name: lindkon/todo-main
-  newTag: de963f05892a1116ac8af6409ab77cb46f37f77e
+  newTag: 2c1a20ed59774f79ce0e7e4671d3949030bbb032
