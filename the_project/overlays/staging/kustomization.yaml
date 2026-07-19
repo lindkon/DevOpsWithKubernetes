@@ -38,13 +38,13 @@ patches:
 images:
 - name: lindkon/broadcaster
   newName: lindkon/broadcaster
-  newTag: a12d55c98d81d8cb8397e92afe9740ef87a3b8a5
+  newTag: 65d064d80816633b70f29e83d98b21542c7d92f6
 - name: lindkon/get-image
   newName: lindkon/get-image
-  newTag: a12d55c98d81d8cb8397e92afe9740ef87a3b8a5
+  newTag: 65d064d80816633b70f29e83d98b21542c7d92f6
 - name: lindkon/todo-backend
   newName: lindkon/todo-backend
-  newTag: a12d55c98d81d8cb8397e92afe9740ef87a3b8a5
+  newTag: 65d064d80816633b70f29e83d98b21542c7d92f6
 - name: lindkon/todo-main
   newName: lindkon/todo-main
-  newTag: a12d55c98d81d8cb8397e92afe9740ef87a3b8a5
+  newTag: 65d064d80816633b70f29e83d98b21542c7d92f6
