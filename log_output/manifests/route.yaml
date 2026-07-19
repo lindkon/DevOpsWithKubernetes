@@ -4,8 +4,11 @@ metadata:
   name: log-output-route
   namespace: exercises
 spec:
+  hostnames:
+    - exercises.localhost
   parentRefs:
-  - name: log-output-gateway
+  - name: shared-gateway
+    namespace: default
   rules:
     - matches:
       - path:

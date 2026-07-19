@@ -6,5 +6,6 @@ resources:
   - ../../base
   - backup.yaml
   - backup-pvc.yaml
+  - route.yaml
 
 
