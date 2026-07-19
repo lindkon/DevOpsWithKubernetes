@@ -2,7 +2,6 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: db-backup
-  namespace: project
 spec:
   schedule: "0 0 * * *"
   jobTemplate:
@@ -28,7 +27,7 @@ spec:
                 - configMapRef:
                     name: todo-backend-config
                 - secretRef:
-                    name: todo-db-secret
+                    name: todo-secret
               volumeMounts:
                 - name: backup
                   mountPath: /backup
