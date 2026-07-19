@@ -26,13 +26,13 @@ resources:
 images:
 - name: lindkon/broadcaster
   newName: lindkon/broadcaster
-  newTag: 3b6043b3383ed2d7ede726b2d5ff219d0212ac7f
+  newTag: 1685885173631edf1d2c48c43643b194553e9b61
 - name: lindkon/get-image
   newName: lindkon/get-image
-  newTag: 3b6043b3383ed2d7ede726b2d5ff219d0212ac7f
+  newTag: 1685885173631edf1d2c48c43643b194553e9b61
 - name: lindkon/todo-backend
   newName: lindkon/todo-backend
-  newTag: 3b6043b3383ed2d7ede726b2d5ff219d0212ac7f
+  newTag: 1685885173631edf1d2c48c43643b194553e9b61
 - name: lindkon/todo-main
   newName: lindkon/todo-main
-  newTag: 3b6043b3383ed2d7ede726b2d5ff219d0212ac7f
+  newTag: 1685885173631edf1d2c48c43643b194553e9b61
