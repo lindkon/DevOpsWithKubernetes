@@ -59,6 +59,10 @@
 - [4.9.](https://github.com/lindkon/DevOpsWithKubernetes/tree/4.9/the_project)
 - [4.10.](https://github.com/lindkon/DevOpsWithKubernetes/tree/4.10/the_project)
 
+### Chapter 6
+
+- [5.1.](https://github.com/lindkon/DevOpsWithKubernetes/tree/5.1/log_output)
+
 ## Commands I will forget
 Create k3d cluster with Gateway:
 k3d cluster create --agents 2 -p 8081:80@loadbalancer --port 8082:30080@agent:0 --k3s-arg '--disable=traefik@server:0'

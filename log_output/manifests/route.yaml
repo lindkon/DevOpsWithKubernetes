@@ -37,3 +37,10 @@ spec:
       backendRefs:
       - name: ping-pong-svc
         port: 80
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /dummy-site
+      backendRefs:
+        - name: example-dummysite-svc
+          port: 80
