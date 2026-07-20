@@ -57,6 +57,7 @@
 - [4.7.](https://github.com/lindkon/DevOpsWithKubernetes/tree/4.7/log_output)
 - [4.8.](https://github.com/lindkon/DevOpsWithKubernetes/tree/4.8/the_project)
 - [4.9.](https://github.com/lindkon/DevOpsWithKubernetes/tree/4.9/the_project)
+- [4.10.](https://github.com/lindkon/DevOpsWithKubernetes/tree/4.10/the_project)
 
 ## Commands I will forget
 Create k3d cluster with Gateway:
@@ -207,3 +208,6 @@ if hosting on GKE, for example, it's easier
 - You are not in control of the database
 - Can be expensive with unforeseen fees or if the provider hikes their rates
 - You are sometimes "trapped" by the provider, it can be hard to switch
+
+## link to config repo
+https://github.com/lindkon/dwk-config
