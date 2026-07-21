@@ -1,0 +1,316 @@
+some lines from completing the tutorial
+
+konradlinder@Mac istio-1.30.3 % for i in $(seq 1 100); do curl -sSI -o /dev/null http://localhost:8080/productpage; done
+konradlinder@Mac istio-1.30.3 % >....                                                        
+  name: productpage-ztunnel
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: productpage
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals:
+        - cluster.local/ns/default/sa/bookinfo-gateway-istio
+EOF
+authorizationpolicy.security.istio.io/productpage-ztunnel created
+konradlinder@Mac istio-1.30.3 % kubectl apply -f samples/curl/curl.yaml
+serviceaccount/curl created
+service/curl created
+deployment.apps/curl created
+konradlinder@Mac istio-1.30.3 % kubectl exec deploy/curl -- curl -s "http://productpage:9080/productpage"
+error: Internal error occurred: unable to upgrade connection: container not found ("curl")
+konradlinder@Mac istio-1.30.3 % kubectl get pods
+NAME                                      READY   STATUS              RESTARTS   AGE
+bookinfo-gateway-istio-6f7964b6f5-kdzv5   1/1     Running             0          18m
+curl-6477d87556-98m2j                     0/1     ContainerCreating   0          17s
+details-v1-559684c7b4-92598               1/1     Running             0          19m
+productpage-v1-658db8b685-dtfm8           1/1     Running             0          19m
+ratings-v1-75484f7ffb-czkdr               1/1     Running             0          19m
+reviews-v1-5f65fdff4d-2r7g7               1/1     Running             0          19m
+reviews-v2-f45c5695b-n7jt6                1/1     Running             0          19m
+reviews-v3-77f747dc48-bn9sp               1/1     Running             0          19m
+konradlinder@Mac istio-1.30.3 % kubectl get pods
+NAME                                      READY   STATUS              RESTARTS   AGE
+bookinfo-gateway-istio-6f7964b6f5-kdzv5   1/1     Running             0          18m
+curl-6477d87556-98m2j                     0/1     ContainerCreating   0          31s
+details-v1-559684c7b4-92598               1/1     Running             0          19m
+productpage-v1-658db8b685-dtfm8           1/1     Running             0          19m
+ratings-v1-75484f7ffb-czkdr               1/1     Running             0          19m
+reviews-v1-5f65fdff4d-2r7g7               1/1     Running             0          19m
+reviews-v2-f45c5695b-n7jt6                1/1     Running             0          19m
+reviews-v3-77f747dc48-bn9sp               1/1     Running             0          19m
+konradlinder@Mac istio-1.30.3 % kubectl get pods 
+NAME                                      READY   STATUS    RESTARTS   AGE
+bookinfo-gateway-istio-6f7964b6f5-kdzv5   1/1     Running   0          19m
+curl-6477d87556-98m2j                     1/1     Running   0          67s
+details-v1-559684c7b4-92598               1/1     Running   0          20m
+productpage-v1-658db8b685-dtfm8           1/1     Running   0          20m
+ratings-v1-75484f7ffb-czkdr               1/1     Running   0          20m
+reviews-v1-5f65fdff4d-2r7g7               1/1     Running   0          20m
+reviews-v2-f45c5695b-n7jt6                1/1     Running   0          20m
+reviews-v3-77f747dc48-bn9sp               1/1     Running   0          20m
+konradlinder@Mac istio-1.30.3 % kubectl exec deploy/curl -- curl -s "http://productpage:9080/productpage"
+command terminated with exit code 56
+konradlinder@Mac istio-1.30.3 % istioctl waypoint apply --enroll-namespace --wait
+✅ waypoint default/waypoint applied
+✅ waypoint default/waypoint is ready!
+✅ namespace default labeled with "istio.io/use-waypoint: waypoint"
+konradlinder@Mac istio-1.30.3 % kubectl get gtw waypoint
+NAME       CLASS            ADDRESS       PROGRAMMED   AGE
+waypoint   istio-waypoint   10.43.56.58   True         33s
+konradlinder@Mac istio-1.30.3 % >....                                                        
+    group: ""
+    name: productpage
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals:
+        - cluster.local/ns/default/sa/curl
+    to:
+    - operation:
+        methods: ["GET"]
+EOF
+
+authorizationpolicy.security.istio.io/productpage-waypoint created
+konradlinder@Mac istio-1.30.3 % >....                                                        
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: productpage
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals:
+        - cluster.local/ns/default/sa/bookinfo-gateway-istio
+        - cluster.local/ns/default/sa/waypoint
+EOF
+authorizationpolicy.security.istio.io/productpage-ztunnel configured
+konradlinder@Mac istio-1.30.3 % kubectl exec deploy/curl -- curl -s "http://productpage:9080/productpage" -X DELETE
+RBAC: access denied%                                                                         
+konradlinder@Mac istio-1.30.3 % kubectl exec deploy/curl -- curl -s http://productpage:9080/productpage | grep -o "<title>.*</title>"
+
+<title>Simple Bookstore App</title>
+konradlinder@Mac istio-1.30.3 % >....                                                        
+  - group: ""
+    kind: Service
+    name: reviews
+    port: 9080
+  rules:
+  - backendRefs:
+    - name: reviews-v1
+      port: 9080
+      weight: 90
+    - name: reviews-v2
+      port: 9080
+      weight: 10
+EOF
+httproute.gateway.networking.k8s.io/reviews created
+konradlinder@Mac istio-1.30.3 % kubectl exec deploy/curl -- sh -c "for i in \$(seq 1 100); do curl -s http://productpage:9080/productpage | grep reviews-v.-; done"
+
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v2-f45c5695b-n7jt6
+                  reviews-v2-f45c5695b-n7jt6
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v2-f45c5695b-n7jt6
+                  reviews-v2-f45c5695b-n7jt6
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v2-f45c5695b-n7jt6
+                  reviews-v2-f45c5695b-n7jt6
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v2-f45c5695b-n7jt6
+                  reviews-v2-f45c5695b-n7jt6
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v2-f45c5695b-n7jt6
+                  reviews-v2-f45c5695b-n7jt6
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v2-f45c5695b-n7jt6
+                  reviews-v2-f45c5695b-n7jt6
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v2-f45c5695b-n7jt6
+                  reviews-v2-f45c5695b-n7jt6
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v2-f45c5695b-n7jt6
+                  reviews-v2-f45c5695b-n7jt6
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v2-f45c5695b-n7jt6
+                  reviews-v2-f45c5695b-n7jt6
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v2-f45c5695b-n7jt6
+                  reviews-v2-f45c5695b-n7jt6
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+                  reviews-v1-5f65fdff4d-2r7g7
+konradlinder@Mac istio-1.30.3 % 
