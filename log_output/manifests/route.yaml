@@ -57,3 +57,16 @@ spec:
       backendRefs:
         - name: greeter-svc
           port: 80
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /wikipedia
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+      backendRefs:
+        - name: wikipedia-svc
+          port: 80

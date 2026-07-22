@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wikipedia
+  namespace: exercises
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+        app: wikipedia
+  template:
+    metadata:
+      labels:
+        app: wikipedia
+      annotations:
+        sidecar.istio.io/inject: "false"
+    spec:
+      containers:
+      - name: wikipedia-main
+        image: nginx:stable-alpine-perl
+        volumeMounts:
+          - name: shared-storage
+            mountPath: /usr/share/nginx/html
+      - name: wikipedia-sidecar
+        image: curlimages/curl:8.21.0
+        command: [
+          'sh',
+          '-c',
+          'while true; do
+            sleep $(( ( RANDOM % 600 ) + 300));
+            curl -L https://en.wikipedia.org/wiki/Special:Random/ -o /usr/share/nginx/html/index.html;
+            done;'
+          ]
+        volumeMounts:
+          - name: shared-storage
+            mountPath: /usr/share/nginx/html
+      initContainers:
+      - name: wikipedia-init
+        image: curlimages/curl:8.21.0
+        command: ['sh', '-c', 'curl -L https://en.wikipedia.org/wiki/Kubernetes -o /usr/share/nginx/html/index.html']
+        volumeMounts:
+          - name: shared-storage
+            mountPath: /usr/share/nginx/html
+      volumes:
+      - name: shared-storage
+        emptyDir: {}
