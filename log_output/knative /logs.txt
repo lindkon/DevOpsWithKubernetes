@@ -1,0 +1,125 @@
+konradlinder@Mac wikipedia % kubectl patch configmap/config-network \
+  --namespace knative-serving \
+  --type merge \
+  --patch '{"data":{"ingress-class":"kourier.ingress.networking.knative.dev"}}'
+configmap/config-network patched
+konradlinder@Mac wikipedia % kubectl get pods -n knative-serving
+NAME                                     READY   STATUS              RESTARTS   AGE
+activator-7c48c6944d-ljp2w               1/1     Running             0          49s
+autoscaler-775c659bc6-f5j8k              1/1     Running             0          49s
+controller-7cf4fbd94-5srn8               0/1     ContainerCreating   0          49s
+net-kourier-controller-568fb445b-9fzkh   1/1     Running             0          48s
+webhook-57ccdb4884-7mwbm                 1/1     Running             0          49s
+konradlinder@Mac wikipedia % kubectl get pods -n knative-serving
+NAME                                     READY   STATUS    RESTARTS   AGE
+activator-7c48c6944d-ljp2w               1/1     Running   0          51s
+autoscaler-775c659bc6-f5j8k              1/1     Running   0          51s
+controller-7cf4fbd94-5srn8               1/1     Running   0          51s
+net-kourier-controller-568fb445b-9fzkh   1/1     Running   0          50s
+webhook-57ccdb4884-7mwbm                 1/1     Running   0          51s
+konradlinder@Mac wikipedia % kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.17.0/serving-default-domain.yaml
+job.batch/default-domain created
+service/default-domain-service created
+konradlinder@Mac wikipedia % kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.17.0/serving-hpa.yaml
+deployment.apps/autoscaler-hpa created
+service/autoscaler-hpa created
+konradlinder@Mac wikipedia % 
+
+
+
+konradlinder@Mac greeter % kubectl get ksvc
+NAME    URL                                         LATESTCREATED   LATESTREADY   READY   REASON
+hello   http://hello.exercises.127.0.0.1.sslip.io   hello-00001     hello-00001   True    
+konradlinder@Mac greeter % kubectl get ksvc                          
+konradlinder@Mac greeter % http://hello.exercises.127.0.0.1.sslip.io 
+konradlinder@Mac greeter %   curl -v --max-time 10 -4 http://hello.exercises.127.0.0.1.sslip.io:8082
+* Host hello.exercises.127.0.0.1.sslip.io:8082 was resolved.
+* IPv6: (none)
+* IPv4: 127.0.0.1
+*   Trying 127.0.0.1:8082...
+* Connected to hello.exercises.127.0.0.1.sslip.io (127.0.0.1) port 8082
+> GET / HTTP/1.1
+> Host: hello.exercises.127.0.0.1.sslip.io:8082
+> User-Agent: curl/8.7.1
+> Accept: */*
+> 
+* Request completely sent off
+* Empty reply from server
+* Closing connection
+curl: (52) Empty reply from server
+konradlinder@Mac greeter % kubectl get pods -n exercises
+kubectl get pods -n kourier-system
+NAME                              READY   STATUS    RESTARTS        AGE
+greeter-dep-v1-799c74fc84-dxl7l   2/2     Running   4 (2m19s ago)   3h52m
+log-output-7c48fbfbd5-nbwhm       3/3     Running   6 (2m17s ago)   110m
+ping-pong-b97969985-cvd6d         2/2     Running   4 (2m17s ago)   106m
+ping-pong-db-0                    2/2     Running   4 (2m19s ago)   3h49m
+NAME                                     READY   STATUS    RESTARTS      AGE
+3scale-kourier-gateway-bd4864ccd-sfltj   1/1     Running   7 (34s ago)   46m
+konradlinder@Mac greeter %   curl -v --max-time 10 -4 http://hello.exercises.127.0.0.1.sslip.io:8082
+* Host hello.exercises.127.0.0.1.sslip.io:8082 was resolved.
+* IPv6: (none)
+* IPv4: 127.0.0.1
+*   Trying 127.0.0.1:8082...
+* Connected to hello.exercises.127.0.0.1.sslip.io (127.0.0.1) port 8082
+> GET / HTTP/1.1
+> Host: hello.exercises.127.0.0.1.sslip.io:8082
+> User-Agent: curl/8.7.1
+> Accept: */*
+> 
+* Request completely sent off
+< HTTP/1.1 200 OK
+< content-length: 13
+< content-type: text/plain; charset=utf-8
+< date: Wed, 22 Jul 2026 14:11:20 GMT
+< server: envoy
+< x-envoy-decorator-operation: hello-00001-private.exercises.svc.cluster.local:80/*
+< x-envoy-upstream-service-time: 3726
+< 
+Hello World!
+* Connection #0 to host hello.exercises.127.0.0.1.sslip.io left intact
+konradlinder@Mac greeter %   curl -v --max-time 10 -4 http://hello.exercises.127.0.0.1.sslip.io:8082
+* Host hello.exercises.127.0.0.1.sslip.io:8082 was resolved.
+* IPv6: (none)
+* IPv4: 127.0.0.1
+*   Trying 127.0.0.1:8082...
+* Connected to hello.exercises.127.0.0.1.sslip.io (127.0.0.1) port 8082
+> GET / HTTP/1.1
+> Host: hello.exercises.127.0.0.1.sslip.io:8082
+> User-Agent: curl/8.7.1
+> Accept: */*
+> 
+* Request completely sent off
+< HTTP/1.1 200 OK
+< content-length: 13
+< content-type: text/plain; charset=utf-8
+< date: Wed, 22 Jul 2026 14:12:02 GMT
+< server: envoy
+< x-envoy-decorator-operation: hello-00001-private.exercises.svc.cluster.local:80/*
+< x-envoy-upstream-service-time: 8
+< 
+Hello World!
+* Connection #0 to host hello.exercises.127.0.0.1.sslip.io left intact
+konradlinder@Mac greeter %   curl -v --max-time 10 -4 http://hello.exercises.127.0.0.1.sslip.io:8082
+* Host hello.exercises.127.0.0.1.sslip.io:8082 was resolved.
+* IPv6: (none)
+* IPv4: 127.0.0.1
+*   Trying 127.0.0.1:8082...
+* Connected to hello.exercises.127.0.0.1.sslip.io (127.0.0.1) port 8082
+> GET / HTTP/1.1
+> Host: hello.exercises.127.0.0.1.sslip.io:8082
+> User-Agent: curl/8.7.1
+> Accept: */*
+> 
+* Request completely sent off
+< HTTP/1.1 200 OK
+< content-length: 13
+< content-type: text/plain; charset=utf-8
+< date: Wed, 22 Jul 2026 14:12:03 GMT
+< server: envoy
+< x-envoy-decorator-operation: hello-00001-private.exercises.svc.cluster.local:80/*
+< x-envoy-upstream-service-time: 2
+< 
+Hello World!
+* Connection #0 to host hello.exercises.127.0.0.1.sslip.io left intact
+konradlinder@Mac greeter % 
