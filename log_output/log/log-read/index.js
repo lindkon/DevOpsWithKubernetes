@@ -23,6 +23,14 @@ const getPongCount = async () => new Promise((resolve, reject) => {
   }).on('error', reject);
 });
 
+const getGreeting = async () => new Promise((resolve, reject) => {
+  http.get(`http://greeter-svc:80/`, (res) => {
+    let data = '';
+    res.on('data', chunk => data += chunk);
+    res.on('end', () => resolve(data));
+  }).on('error', reject);
+});
+
 const server =  http.createServer( async (req, res) => {
   try {
     if (req.method === 'GET' && req.url === '/') {
@@ -30,13 +38,15 @@ const server =  http.createServer( async (req, res) => {
       const pongCount = await getPongCount();
       const fileInfo = await getFile(filePath);
       const message  = `MESSAGE=${process.env.MESSAGE}`;
+      const greeting = await getGreeting();
       res.statusCode = 200;   
       res.setHeader('Content-Type', 'text/plain');
       res.end(
         `file content: ${fileInfo}\n` +
         `env variable: ${message}\n` +
         `${currentStatus}\n` +
-        `Ping / Pongs: ${pongCount}`
+        `Ping / Pongs: ${pongCount} \n` +
+        `greetings: ${greeting}`
       );
     } else if (req.method === 'GET' && req.url === '/healthz') {
       const pongCount = await getPongCount();

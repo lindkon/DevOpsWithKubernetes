@@ -1,0 +1,18 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: greeter-vsvc
+  namespace: exercises
+spec:
+  hosts:
+    - greeter-svc
+  http:
+  - route:
+    - destination:
+        host: greeter-svc
+        subset: v1
+      weight: 50
+    - destination:
+        host: greeter-svc
+        subset: v2
+      weight: 50

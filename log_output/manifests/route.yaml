@@ -44,3 +44,16 @@ spec:
       backendRefs:
         - name: example-dummysite-svc
           port: 80
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /greeter
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+      backendRefs:
+        - name: greeter-svc
+          port: 80
