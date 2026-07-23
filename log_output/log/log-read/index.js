@@ -16,7 +16,7 @@ const getFile = (filePath) => new Promise((resolve, reject) => {
 });
 
 const getPongCount = async () => new Promise((resolve, reject) => {
-  http.get(`http://ping-pong-svc:80/pings`, (res) => {
+  http.get(`http://ping-pong-svc.exercises.svc.cluster.local/pings`, (res) => {
     let data = '';
     res.on('data', chunk => data += chunk);
     res.on('end', () => resolve(data));
@@ -49,10 +49,9 @@ const server =  http.createServer( async (req, res) => {
         `greetings: ${greeting}`
       );
     } else if (req.method === 'GET' && req.url === '/healthz') {
-      const pongCount = await getPongCount();
       res.statusCode = 200;
       res.setHeader('Content-Type', 'text/plain');
-      res.end(`Reading pong count ${pongCount}`);
+      res.end(`Healthy`);
     } else {
       res.statusCode = 404;
       res.setHeader('Content-Type', 'text/plain');

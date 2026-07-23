@@ -1,0 +1,26 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: ping-pong-svc
+  namespace: exercises
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/min-scale: "0"
+    spec:
+      containers:
+        - name: ping-pong
+          image: lindkon/ping-pong
+          envFrom:
+            - configMapRef:
+                name: ping-pong-config
+          ports:
+            - containerPort: 3001
+          readinessProbe:
+            initialDelaySeconds: 1
+            periodSeconds: 5
+            httpGet:
+              path: /healthz
+              port: 3001
+

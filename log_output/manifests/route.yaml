@@ -18,25 +18,30 @@ spec:
       - name: log-output-svc
         port: 80
     - matches:
-      - path:
-          type: PathPrefix
-          value: /pings
-      backendRefs:
-      - name: ping-pong-svc
-        port: 80
-    - matches:
-      - path:
-          type: PathPrefix
-          value: /pingpong
+        - path:
+            type: PathPrefix
+            value: /pings
       filters:
         - type: URLRewrite
           urlRewrite:
+            hostname: ping-pong-svc.exercises.svc.cluster.local
+      backendRefs:
+        - name: ping-pong-svc
+          port: 80
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /pingpong
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            hostname: ping-pong-svc.exercises.svc.cluster.local
             path:
               type: ReplacePrefixMatch
               replacePrefixMatch: /
       backendRefs:
-      - name: ping-pong-svc
-        port: 80
+        - name: ping-pong-svc
+          port: 80
     - matches:
         - path:
             type: PathPrefix

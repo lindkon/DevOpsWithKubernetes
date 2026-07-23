@@ -11,8 +11,7 @@ resources:
 - ping-pong/manifests/analysis-template.yaml
 - ping-pong/manifests/configmap.yaml
 - ping-pong/manifests/headless-service.yaml
-- ping-pong/manifests/rollout.yaml
-- ping-pong/manifests/service.yaml
+- ping-pong/manifests/service-k.yaml
 - ping-pong/manifests/statefulset.yaml
 - log/manifests/deployment.yaml
 - log/manifests/service.yaml
