@@ -1,0 +1,14 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: allow-httproutes-from-exercises
+  namespace: kourier-system
+spec:
+  from:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: exercises
+  to:
+    - group: ""
+      kind: Service
+      name: kourier-internal

@@ -26,7 +26,8 @@ spec:
           urlRewrite:
             hostname: ping-pong-svc.exercises.svc.cluster.local
       backendRefs:
-        - name: ping-pong-svc
+        - name: kourier-internal
+          namespace: kourier-system
           port: 80
     - matches:
         - path:
@@ -40,7 +41,8 @@ spec:
               type: ReplacePrefixMatch
               replacePrefixMatch: /
       backendRefs:
-        - name: ping-pong-svc
+        - name: kourier-internal
+          namespace: kourier-system
           port: 80
     - matches:
         - path:
